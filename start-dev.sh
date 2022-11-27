@@ -1,0 +1,1 @@
+CompileDaemon -command="./wtv-video-conversion-service" -include=".env"
