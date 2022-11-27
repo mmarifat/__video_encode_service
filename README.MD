@@ -23,7 +23,9 @@ $ ./start-dev.sh
 Build for production
 
 ```bash
-$ go build 
+$ swag init
+# then
+$ go build
 ```
 
 ## Logging

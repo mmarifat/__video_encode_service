@@ -29,3 +29,5 @@ vendor/
 /server-success.log
 /video-conversion-service
 /go.sum
+docs*
+!docs/.gitkeep

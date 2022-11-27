@@ -11,7 +11,7 @@ import (
 	"video-conversion-service/configs"
 )
 
-func RateLimiter(router *gin.Engine) {
+func RateLimiter(router *gin.RouterGroup) {
 	// Put a token into the token bucket every 1s
 	// Maximum 1 request allowed per second
 	rdb, err := goutils.NewRedisClient(&redis.Options{})
