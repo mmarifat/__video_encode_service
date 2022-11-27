@@ -7,19 +7,19 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"os"
 	"strconv"
-	"video-conversion-service/configs"
-	"video-conversion-service/controllers"
 	"video-conversion-service/docs"
-	"video-conversion-service/middlewares"
-	"video-conversion-service/routes"
+	"video-conversion-service/src/configs/funtions"
+	"video-conversion-service/src/controllers/v1"
+	middlewares2 "video-conversion-service/src/middlewares"
+	routes2 "video-conversion-service/src/routes"
 )
 
 func main() {
-	port := configs.DotEnvVariable("PORT")
-	mode := configs.DotEnvVariable("GIN_MODE")
+	port := funtions.DotEnvVariable("PORT")
+	mode := funtions.DotEnvVariable("GIN_MODE")
 
 	// kill previously invoked port (need for development only for HMR)
-	configs.KillPort(port)
+	funtions.KillPort(port)
 
 	if mode == "debug" {
 		gin.ForceConsoleColor()
@@ -35,40 +35,34 @@ func main() {
 	}
 
 	router := gin.New()
+	// router.MaxMultipartMemory = 10 << 20 // 10 MB (Max memory to be used when uploading file)
 	basePath := "/api/v1"
 
 	// middlwaers
-	router.Use(middlewares.LogsMiddleware())
+	router.Use(middlewares2.LogsMiddleware())
 	router.Use(gin.Recovery())
-	router.Use(middlewares.CORSMiddleware())
+	router.Use(middlewares2.CORSMiddleware())
+	router.Use(middlewares2.MaxUploadBodySizeMiddleware())
 
 	// group routes
 	v1Router := router.Group(basePath)
 	{
-		v1Router.GET("/status", controllers.ApiStatus)
-		routes.DefaultRoutes(v1Router)
-		routes.CompressRoutes(v1Router)
-	}
-
-	// upload max limit from env or maximum 10
-	maxMegaByte, __err := strconv.ParseInt(configs.DotEnvVariable("MAX_UPLOAD_SIZE_MEGABYTE"), 10, 64)
-	if __err != nil {
-		router.MaxMultipartMemory = maxMegaByte << 20
-	} else {
-		router.MaxMultipartMemory = 10 << 20 // 10 MB
+		v1Router.GET("/status", v1.ApiStatus)
+		routes2.DefaultRoutes(v1Router)
+		routes2.CompressRoutes(v1Router)
 	}
 
 	// By default, http.ListenAndServe (which gin.Run wraps) will serve an unbounded number of requests.
 	// Limiting the number of simultaneous connections can sometimes greatly speed things up under load.
-	if configs.DotEnvVariable("LIMIT_NO_OF_CONNECTION") == "true" {
-		maxNoOfConnection, err := strconv.Atoi(configs.DotEnvVariable("LIMIT_MAX_NO_OF_CONNECTION"))
+	if funtions.DotEnvVariable("LIMIT_NO_OF_CONNECTION") == "true" {
+		maxNoOfConnection, err := strconv.Atoi(funtions.DotEnvVariable("LIMIT_MAX_NO_OF_CONNECTION"))
 		if err == nil {
-			v1Router.Use(middlewares.MaxAllowedConnection(maxNoOfConnection))
+			v1Router.Use(middlewares2.MaxAllowedConnection(maxNoOfConnection))
 		}
 	}
 	// rate limiter
-	if configs.DotEnvVariable("LIMIT_RATE") == "true" {
-		middlewares.RateLimiter(v1Router)
+	if funtions.DotEnvVariable("LIMIT_RATE") == "true" {
+		middlewares2.RateLimiter(v1Router)
 	}
 
 	// Swagger API docs

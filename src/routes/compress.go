@@ -2,14 +2,14 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"video-conversion-service/configs"
+	"video-conversion-service/src/configs/funtions"
 )
 
 func CompressRoutes(router *gin.RouterGroup) {
 	compressRoute := router.Group("/compress")
 	{
 		compressRoute.GET("/picture", func(c *gin.Context) {
-			configs.SuccessResponse(c, "pong", gin.H{
+			funtions.SuccessResponse(c, "pong", gin.H{
 				"count": 1,
 				"data":  "ok",
 			})

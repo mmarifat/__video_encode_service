@@ -1,4 +1,2 @@
-go mod vendor
-go mod tidy
 swag init
-CompileDaemon -command="./video-conversion-service" -include=".env"
+CompileDaemon -command="./video-conversion-service" -include=".env" -exclude-dir="./uploaded" -exclude-dir="./docs"

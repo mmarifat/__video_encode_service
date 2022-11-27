@@ -8,7 +8,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"strconv"
 	"time"
-	"video-conversion-service/configs"
+	"video-conversion-service/src/configs/funtions"
 )
 
 func RateLimiter(router *gin.RouterGroup) {
@@ -25,14 +25,14 @@ func RateLimiter(router *gin.RouterGroup) {
 		},
 		// config: how to respond when limiting
 		LimitedHandler: func(c *gin.Context) {
-			configs.ErrorResponse(c, "Too many requests", nil)
+			funtions.ErrorResponse(c, "Too many requests", nil)
 			c.Abort()
 			return
 		},
 		// config: return ratelimiter token fill interval and bucket size (every 1 second)
 		TokenBucketConfig: func(*gin.Context) (time.Duration, int) {
-			intervalSecond, err1 := strconv.Atoi(configs.DotEnvVariable("LIMIT_RATE_INTERVAL_SECOND"))
-			bucketSize, err2 := strconv.Atoi(configs.DotEnvVariable("LIMIT_RATE_BUCKET_SIZE"))
+			intervalSecond, err1 := strconv.Atoi(funtions.DotEnvVariable("LIMIT_RATE_INTERVAL_SECOND"))
+			bucketSize, err2 := strconv.Atoi(funtions.DotEnvVariable("LIMIT_RATE_BUCKET_SIZE"))
 			if err1 == nil && err2 == nil {
 				fmt.Printf("ok %s", time.Second*time.Duration(intervalSecond))
 				return time.Second * time.Duration(intervalSecond), bucketSize
