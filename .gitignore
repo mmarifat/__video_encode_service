@@ -10,9 +10,11 @@ main
 
 # exclude everything
 uploaded/*
+docs/*
 
 # exception to the rule
 !uploaded/.gitkeep
+!docs/.gitkeep
 
 # Test binary, built with `go test -c`
 *.test
@@ -29,5 +31,3 @@ vendor/
 /server-success.log
 /video-conversion-service
 /go.sum
-docs*
-!docs/.gitkeep

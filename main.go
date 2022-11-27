@@ -77,7 +77,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Video Conversion Service"
 	docs.SwaggerInfo.Description = "This microservice deals with the upload and optinally compress files with the help of FFMPEG library as quality passed by user"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	fmt.Printf("APi Docs is running at http://localhost:" + port + "/swagger/index.html")
+	fmt.Printf("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
 
 	err := router.Run("localhost:" + port)
 	if err != nil {
