@@ -8,7 +8,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"strconv"
 	"time"
-	"wtv-video-conversion-service/configs"
+	"video-conversion-service/configs"
 )
 
 func RateLimiter(router *gin.Engine) {

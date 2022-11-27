@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"wtv-video-conversion-service/configs"
+	"video-conversion-service/configs"
 )
 
 func DefaultRoutes(router *gin.RouterGroup) {

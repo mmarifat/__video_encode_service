@@ -1,4 +1,4 @@
-module wtv-video-conversion-service
+module video-conversion-service
 
 go 1.19
 

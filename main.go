@@ -6,9 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"os"
 	"strconv"
-	"wtv-video-conversion-service/configs"
-	"wtv-video-conversion-service/middlewares"
-	"wtv-video-conversion-service/routes"
+	"video-conversion-service/configs"
+	"video-conversion-service/middlewares"
+	"video-conversion-service/routes"
 )
 
 func main() {

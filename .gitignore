@@ -27,5 +27,5 @@ uploaded/*
 vendor/
 /server-error.log
 /server-success.log
-/wtv-video-conversion-service
+/video-conversion-service
 /go.sum
