@@ -2,7 +2,7 @@ VIDEO-CONVERSION-SERVICE
 
 ## Getting Started
 
-Install dependencies
+Install dependencies (Optional if you are running in locally)
 
 ```bash
 $ go mod vendor
