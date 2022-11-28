@@ -49,11 +49,8 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	funtions.SuccessResponse(c, "File uploaded and encoded successfully", gin.H{
-		"count": 1,
-		"data": gin.H{
-			"fileName":     encodedFileName,
-			"orifinalSize": file.Size,
-		},
+	funtions.SuccessResponse(c, "File uploaded and encoded successfully", 1, gin.H{
+		"fileName":     encodedFileName,
+		"orifinalSize": file.Size,
 	})
 }

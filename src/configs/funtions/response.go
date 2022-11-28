@@ -6,8 +6,11 @@ import (
 	"video-conversion-service/src/configs/types"
 )
 
-func SuccessResponse(c *gin.Context, msg string, data any) {
-	resp := &types.ResponseObject{Statuscode: http.StatusOK, Message: msg, Payload: data}
+func SuccessResponse(c *gin.Context, msg string, count int, data any) {
+	resp := &types.ResponseObject{Statuscode: http.StatusOK, Message: msg, Payload: gin.H{
+		"count": count,
+		"data":  data,
+	}}
 	c.Header("Content-Type", "application/json")
 	c.JSON(resp.Statuscode, resp)
 }

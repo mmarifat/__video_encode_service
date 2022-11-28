@@ -40,11 +40,8 @@ func UploadFile(c *gin.Context) {
 		funtions.ErrorResponse(c, "File upload error", err.Error())
 	}
 
-	funtions.SuccessResponse(c, "File uploaded successfully", gin.H{
-		"count": 1,
-		"data": gin.H{
-			"filename": uploadedFileName,
-			"size":     file.Size,
-		},
+	funtions.SuccessResponse(c, "File uploaded successfully", 1, gin.H{
+		"filename": uploadedFileName,
+		"size":     file.Size,
 	})
 }
