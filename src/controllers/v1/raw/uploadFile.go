@@ -1,4 +1,4 @@
-package _default
+package raw
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,8 +8,8 @@ import (
 )
 
 // UploadFile @BasePath /api/v1
-// @Tags _default
-// DeafultPictureUpload godoc
+// @Tags RAW
+// RawUpload godoc
 // @Summary upload any file in raw format
 // @Schemes
 // @Description execution will upload any file in raw format
@@ -19,7 +19,7 @@ import (
 // @Produce json
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
-// @Router /default/file [post]
+// @Router /raw/file [post]
 func UploadFile(c *gin.Context) {
 	var form types.FileJson
 	if bindError := c.ShouldBind(&form); bindError != nil {

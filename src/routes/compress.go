@@ -8,7 +8,7 @@ import (
 func CompressRoutes(router *gin.RouterGroup) {
 	compressRoute := router.Group("/compress")
 	{
-		compressRoute.GET("/picture", func(c *gin.Context) {
+		compressRoute.GET("/file", func(c *gin.Context) {
 			funtions.SuccessResponse(c, "pong", gin.H{
 				"count": 1,
 				"data":  "ok",

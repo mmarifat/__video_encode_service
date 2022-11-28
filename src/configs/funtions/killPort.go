@@ -27,10 +27,10 @@ func exec_cmd(cmd *exec.Cmd) {
 		}
 		if exitError, ok := err.(*exec.ExitError); ok {
 			waitStatus = exitError.Sys().(syscall.WaitStatus)
-			fmt.Printf("Error during killing (exit code: %s)\n", []byte(fmt.Sprintf("%d", waitStatus.ExitStatus())))
+			fmt.Printf("Error during port reviving (exit code: %s)\n", []byte(fmt.Sprintf("%d", waitStatus.ExitStatus())))
 		}
 	} else {
 		waitStatus = cmd.ProcessState.Sys().(syscall.WaitStatus)
-		fmt.Printf("Port successfully killed (exit code: %s)\n", []byte(fmt.Sprintf("%d", waitStatus.ExitStatus())))
+		fmt.Printf("Port successfully revived (exit code: %s)\n", []byte(fmt.Sprintf("%d", waitStatus.ExitStatus())))
 	}
 }

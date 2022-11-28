@@ -6,8 +6,8 @@ import (
 )
 
 // ApiStatus @BasePath /api/v1
-// @Tags status
-// StatusExample godoc
+// @Tags STATUS
+// getStatus godoc
 // @Summary returns gin and cpu status
 // @Schemes
 // @Description execution will return gin and cpu status

@@ -1,10 +1,18 @@
 VIDEO-CONVERSION-SERVICE
 
+## Requirements
+
+- go (version 1.19+)
+- air
+- ffmpeg
+
 ## Getting Started
 
 Install dependencies
 
 ```bash
+$ go install github.com/cosmtrek/air@latest
+# then
 $ go mod vendor
 # and
 $ go mod tidy
@@ -17,7 +25,7 @@ To edit environment variables, create a file with name `.env` and copy the conte
 Run Locally
 
 ```bash
-$ ./start-dev.sh
+$ air
 ```
 
 Build for production

@@ -11,10 +11,12 @@ main
 # exclude everything
 uploaded/*
 docs/*
+logs/*
 
 # exception to the rule
 !uploaded/.gitkeep
 !docs/.gitkeep
+!logs/.gitkeep
 
 # Test binary, built with `go test -c`
 *.test
@@ -26,8 +28,9 @@ docs/*
 .idea
 
 # Dependency directories (remove the comment below to include it)
-vendor/
+/vendor
 /server-error.log
 /server-success.log
 /video-conversion-service
 /go.sum
+/air-temp/

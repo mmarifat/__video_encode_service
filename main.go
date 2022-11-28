@@ -5,64 +5,50 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"os"
 	"strconv"
+	"strings"
 	"video-conversion-service/docs"
 	"video-conversion-service/src/configs/funtions"
 	"video-conversion-service/src/controllers/v1"
-	middlewares2 "video-conversion-service/src/middlewares"
-	routes2 "video-conversion-service/src/routes"
+	"video-conversion-service/src/middlewares"
+	"video-conversion-service/src/routes"
 )
 
 func main() {
 	port := funtions.DotEnvVariable("PORT")
-	mode := funtions.DotEnvVariable("GIN_MODE")
-
 	// kill previously invoked port (need for development only for HMR)
 	funtions.KillPort(port)
 
-	if mode == "debug" {
-		gin.ForceConsoleColor()
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-		// color aren't needed in release mode
-		gin.DisableConsoleColor()
-		// in release mode, use the file to store the success and error logs
-		loggerSuccessFile, _ := os.Create("logs/success.log")
-		loggerErrorFile, _ := os.Create("logs/error.log")
-		gin.DefaultWriter = loggerSuccessFile
-		gin.DefaultErrorWriter = loggerErrorFile
-	}
-
 	router := gin.New()
-	// router.MaxMultipartMemory = 10 << 20 // 10 MB (Max memory to be used when uploading file)
+	// router.MaxMultipartMemory = 1024 << 20 // 1024 MB (Max memory to be used when uploading file)
 	basePath := "/api/v1"
 
 	// middlwaers
-	router.Use(middlewares2.LogsMiddleware())
-	router.Use(gin.Recovery())
-	router.Use(middlewares2.CORSMiddleware())
-	router.Use(middlewares2.MaxUploadBodySizeMiddleware())
+	router.Use(
+		middlewares.LogsMiddleware(),
+		gin.Recovery(),
+		middlewares.CORSMiddleware(),
+	)
 
 	// group routes
 	v1Router := router.Group(basePath)
 	{
 		v1Router.GET("/status", v1.ApiStatus)
-		routes2.DefaultRoutes(v1Router)
-		routes2.CompressRoutes(v1Router)
+		routes.RawRoutes(v1Router)
+		routes.CompressRoutes(v1Router)
 	}
 
-	// By default, http.ListenAndServe (which gin.Run wraps) will serve an unbounded number of requests.
+	// By raw, http.ListenAndServe (which gin.Run wraps) will serve an unbounded number of requests.
 	// Limiting the number of simultaneous connections can sometimes greatly speed things up under load.
 	if funtions.DotEnvVariable("LIMIT_NO_OF_CONNECTION") == "true" {
 		maxNoOfConnection, err := strconv.Atoi(funtions.DotEnvVariable("LIMIT_MAX_NO_OF_CONNECTION"))
 		if err == nil {
-			v1Router.Use(middlewares2.MaxAllowedConnection(maxNoOfConnection))
+			v1Router.Use(middlewares.MaxAllowedConnection(maxNoOfConnection))
 		}
 	}
 	// rate limiter
 	if funtions.DotEnvVariable("LIMIT_RATE") == "true" {
-		middlewares2.RateLimiter(v1Router)
+		middlewares.RateLimiter(v1Router)
 	}
 
 	// Swagger API docs
@@ -71,10 +57,15 @@ func main() {
 	docs.SwaggerInfo.Title = "Video Conversion Service"
 	docs.SwaggerInfo.Description = "This microservice deals with the upload and optinally compress files with the help of FFMPEG library as quality passed by user"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	fmt.Printf("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
 
 	err := router.Run("localhost:" + port)
+
+	fmt.Printf("APi is running at http://localhost:" + port + "\n")
+	fmt.Printf("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
+
 	if err != nil {
-		fmt.Printf("Failed to start the server")
+		if strings.ContainsAny(err.Error(), "bind: address already in use") == false {
+			fmt.Printf("Failed to start the server as %s", err.Error())
+		}
 	}
 }
