@@ -2,9 +2,9 @@ package compress
 
 import (
 	"github.com/gin-gonic/gin"
-	"video-conversion-service/src/configs/controllerHelpers"
 	"video-conversion-service/src/configs/funtions"
 	"video-conversion-service/src/configs/types"
+	services2 "video-conversion-service/src/services"
 )
 
 // UploadFile @BasePath /api/v1
@@ -35,7 +35,7 @@ func UploadFile(c *gin.Context) {
 
 	fileName := c.PostForm("name")
 	dirType := c.PostForm("type")
-	uploadedFileName, err := controllerHelpers.SaveFileToDir(c, file, fileName, dirType)
+	uploadedFileName, err := services2.SaveFileToDir(c, file, fileName, dirType)
 	if err != nil {
 		funtions.ErrorResponse(c, "File upload error", err.Error())
 		return
@@ -43,7 +43,7 @@ func UploadFile(c *gin.Context) {
 
 	ffmpegStr := c.PostForm("ffmpegStr")
 	outputFormat := c.PostForm("outputFormat")
-	encodedFileName, err := controllerHelpers.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr, outputFormat)
+	encodedFileName, err := services2.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr, outputFormat)
 	if err != nil {
 		funtions.ErrorResponse(c, "File encoding error", err.Error())
 		return
