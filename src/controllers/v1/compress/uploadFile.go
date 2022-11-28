@@ -21,7 +21,7 @@ import (
 // @Error 400  {object} types.ErrorObject
 // @Router /compress/file [post]
 func UploadFile(c *gin.Context) {
-	var form types.FileJson
+	var form types.FileCompressJson
 	if bindError := c.ShouldBind(&form); bindError != nil {
 		funtions.ErrorResponse(c, "File upload mulfuntion", bindError.Error())
 		return
