@@ -9,14 +9,18 @@ import (
 	"video-conversion-service/src/configs/funtions"
 )
 
-func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string) (string, error) {
+func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string, outputFormat string) (string, error) {
 	destination := funtions.MakeDirSync(dirType)
 
 	inputFile := destination + "/" + fileName
 
 	extension := filepath.Ext(fileName)
 	destinationWithFfmpeg := strings.TrimSuffix(fileName, extension)
-	destinationWithFfmpeg += "--enc" + extension
+	if len(outputFormat) > 0 {
+		destinationWithFfmpeg += "--enc." + outputFormat
+	} else {
+		destinationWithFfmpeg += "--enc" + extension
+	}
 	destinationWithFfmpegFile := destination + "/" + destinationWithFfmpeg
 
 	ffmpegStringArgs := "ffmpeg -i " + inputFile + " " + ffmpegString + " " + destinationWithFfmpegFile
@@ -26,11 +30,13 @@ func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string) (s
 	cmd := exec.Command(args[0], args[1:]...)
 	b, err := cmd.CombinedOutput()
 
-	// remove previous original file
-	os.Remove(inputFile)
-
-	if err == nil {
+	if err != nil {
 		return "", err
+	}
+
+	// remove previous original file
+	if osErr := os.Remove(inputFile); osErr != nil {
+		return "", osErr
 	}
 
 	if len(string(b)) > 0 {

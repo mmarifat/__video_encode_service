@@ -9,8 +9,9 @@ type FileJson struct {
 }
 
 type FileCompressJson struct {
-	Name      string                `form:"name"`
-	Type      string                `form:"type" binding:"required" default:"files-encoded"`
-	FfmpegStr string                `form:"ffmpegStr" binding:"required"`
-	File      *multipart.FileHeader `form:"file" binding:"required" swaggerignore:"true"`
+	Name         string                `form:"name"`
+	Type         string                `form:"type" binding:"required" default:"files-encoded"`
+	FfmpegStr    string                `form:"ffmpegStr" binding:"required"`
+	OutputFormat string                `form:"outputFormat"`
+	File         *multipart.FileHeader `form:"file" binding:"required" swaggerignore:"true"`
 }

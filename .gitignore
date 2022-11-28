@@ -33,4 +33,4 @@ logs/*
 /server-success.log
 /video-conversion-service
 /go.sum
-/air-temp/
+/air-temp

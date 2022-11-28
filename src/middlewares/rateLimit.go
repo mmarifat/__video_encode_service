@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"github.com/axiaoxin-com/goutils"
 	"github.com/axiaoxin-com/ratelimiter"
 	"github.com/gin-gonic/gin"
@@ -34,11 +33,9 @@ func RateLimiter(router *gin.RouterGroup) {
 			intervalSecond, err1 := strconv.Atoi(funtions.DotEnvVariable("LIMIT_RATE_INTERVAL_SECOND"))
 			bucketSize, err2 := strconv.Atoi(funtions.DotEnvVariable("LIMIT_RATE_BUCKET_SIZE"))
 			if err1 == nil && err2 == nil {
-				fmt.Printf("ok %s", time.Second*time.Duration(intervalSecond))
 				return time.Second * time.Duration(intervalSecond), bucketSize
 			}
 			// else 1 second with 1 bucket size
-			fmt.Printf("test %s", time.Second*1)
 			return time.Second * 1, 1
 		},
 	}))

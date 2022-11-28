@@ -27,24 +27,25 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	file, err1 := c.FormFile("file")
-	if err1 != nil {
-		funtions.ErrorResponse(c, "File form not found", err1.Error())
+	file, err := c.FormFile("file")
+	if err != nil {
+		funtions.ErrorResponse(c, "File form not found", err.Error())
 		return
 	}
 
 	fileName := c.PostForm("name")
 	dirType := c.PostForm("type")
-	uploadedFileName, err2 := controllerHelpers.SaveFileToDir(c, file, fileName, dirType)
-	if err2 != nil {
-		funtions.ErrorResponse(c, "File upload error", err2.Error())
+	uploadedFileName, err := controllerHelpers.SaveFileToDir(c, file, fileName, dirType)
+	if err != nil {
+		funtions.ErrorResponse(c, "File upload error", err.Error())
 		return
 	}
 
 	ffmpegStr := c.PostForm("ffmpegStr")
-	encodeInfo, err3 := controllerHelpers.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr)
-	if err3 != nil {
-		funtions.ErrorResponse(c, "File encoding error", err3.Error())
+	outputFormat := c.PostForm("outputFormat")
+	encodeInfo, err := controllerHelpers.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr, outputFormat)
+	if err != nil {
+		funtions.ErrorResponse(c, "File encoding error", err.Error())
 		return
 	}
 

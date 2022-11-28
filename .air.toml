@@ -5,7 +5,7 @@ tmp_dir = "air-temp"
 [build]
   args_bin = []
   bin = "./air-temp/main"
-  cmd = "go build -o ./air-temp/main ."
+  cmd = "swag init & go build -o ./air-temp/main ."
   delay = 1000
   exclude_dir = ["assets", "air-temp", "vendor", "testdata", "uploaded", "docs", "logs"]
   exclude_file = []
@@ -14,7 +14,7 @@ tmp_dir = "air-temp"
   follow_symlink = false
   full_bin = ""
   include_dir = []
-  include_ext = ["go", "tpl", "tmpl", "html"]
+  include_ext = ["go"]
   kill_delay = "0s"
   log = "build-errors.log"
   send_interrupt = false
