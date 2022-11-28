@@ -23,10 +23,10 @@ func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string, ou
 	}
 	destinationWithFfmpegFile := destination + "/" + destinationWithFfmpeg
 
-	ffmpegStringArgs := "ffmpeg -i " + inputFile + " " + ffmpegString + " " + destinationWithFfmpegFile
-	pattern := regexp.MustCompile(`\s+`)
-	ffmpegStringArgs = pattern.ReplaceAllString(ffmpegStringArgs, " ")
-	args := strings.Split(ffmpegStringArgs, " ")
+	ffmpegStringArgs := `ffmpeg -i ` + inputFile + ` ` + ffmpegString + ` ` + destinationWithFfmpegFile
+	ffmpegStringArgs = regexp.MustCompile(`\s+`).ReplaceAllString(ffmpegStringArgs, ` `)
+	ffmpegStringArgs = strings.ReplaceAll(ffmpegStringArgs, "\"", "'")
+	args := strings.Split(ffmpegStringArgs, ` `)
 	cmd := exec.Command(args[0], args[1:]...)
 	b, err := cmd.CombinedOutput()
 

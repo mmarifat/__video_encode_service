@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"video-conversion-service/src/configs/funtions"
@@ -17,6 +18,7 @@ func SaveFileToDir(c *gin.Context, file *multipart.FileHeader, fileName string, 
 		fileName = strings.TrimSuffix(file.Filename, extension)
 	}
 
+	fileName = regexp.MustCompile(`\s+`).ReplaceAllString(fileName, `-`)
 	fileName += "-" + strconv.Itoa(int(funtions.MakeTimestamp()))
 	fileName += extension
 	destination += "/" + fileName

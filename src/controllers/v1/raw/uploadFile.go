@@ -35,8 +35,8 @@ func UploadFile(c *gin.Context) {
 
 	fileName := c.PostForm("name")
 	dirType := c.PostForm("type")
-	uploadedFileName, err2 := controllerHelpers.SaveFileToDir(c, file, fileName, dirType)
-	if err2 != nil {
+	uploadedFileName, err := controllerHelpers.SaveFileToDir(c, file, fileName, dirType)
+	if err != nil {
 		funtions.ErrorResponse(c, "File upload error", err.Error())
 	}
 
