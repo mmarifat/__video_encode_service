@@ -43,7 +43,7 @@ func UploadFile(c *gin.Context) {
 
 	ffmpegStr := c.PostForm("ffmpegStr")
 	outputFormat := c.PostForm("outputFormat")
-	encodeInfo, err := controllerHelpers.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr, outputFormat)
+	encodedFileName, err := controllerHelpers.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr, outputFormat)
 	if err != nil {
 		funtions.ErrorResponse(c, "File encoding error", err.Error())
 		return
@@ -52,7 +52,7 @@ func UploadFile(c *gin.Context) {
 	funtions.SuccessResponse(c, "File uploaded and encoded successfully", gin.H{
 		"count": 1,
 		"data": gin.H{
-			"output":       encodeInfo,
+			"fileName":     encodedFileName,
 			"orifinalSize": file.Size,
 		},
 	})

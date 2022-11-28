@@ -28,7 +28,7 @@ func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string, ou
 	ffmpegStringArgs = strings.ReplaceAll(ffmpegStringArgs, "\"", "'")
 	args := strings.Split(ffmpegStringArgs, ` `)
 	cmd := exec.Command(args[0], args[1:]...)
-	b, err := cmd.CombinedOutput()
+	_, err := cmd.CombinedOutput()
 
 	if err != nil {
 		return "", err
@@ -39,9 +39,5 @@ func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string, ou
 		return "", osErr
 	}
 
-	if len(string(b)) > 0 {
-		return string(b), nil
-	} else {
-		return destinationWithFfmpeg, nil
-	}
+	return destinationWithFfmpeg, nil
 }
