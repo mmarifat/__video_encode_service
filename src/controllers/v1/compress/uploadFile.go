@@ -1,4 +1,4 @@
-package raw
+package compress
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,18 +8,18 @@ import (
 )
 
 // UploadFile @BasePath /api/v1
-// @Tags RAW
-// RawUpload godoc
-// @Summary upload any file in raw format
+// @Tags COMPRESS
+// CompressUpload godoc
+// @Summary upload any file in compress format
 // @Schemes
-// @Description execution will upload any file in raw format
-// @Param file formData types.FileJson true "request"
+// @Description execution will upload any file in compress format
+// @Param file formData types.FileCompressJson true "request"
 // @Param file formData file true "File"
 // @Accept multipart/form-data; boundary=normal
 // @Produce json
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
-// @Router /raw/file [post]
+// @Router /compress/file [post]
 func UploadFile(c *gin.Context) {
 	var form types.FileJson
 	if bindError := c.ShouldBind(&form); bindError != nil {
@@ -27,9 +27,9 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	file, err := c.FormFile("file")
-	if err != nil {
-		funtions.ErrorResponse(c, "File form not found", err.Error())
+	file, err1 := c.FormFile("file")
+	if err1 != nil {
+		funtions.ErrorResponse(c, "File form not found", err1.Error())
 		return
 	}
 
@@ -37,14 +37,22 @@ func UploadFile(c *gin.Context) {
 	dirType := c.PostForm("type")
 	uploadedFileName, err2 := controllerHelpers.SaveFileToDir(c, file, fileName, dirType)
 	if err2 != nil {
-		funtions.ErrorResponse(c, "File upload error", err.Error())
+		funtions.ErrorResponse(c, "File upload error", err2.Error())
+		return
 	}
 
-	funtions.SuccessResponse(c, "File uploaded successfully", gin.H{
+	ffmpegStr := c.PostForm("ffmpegStr")
+	encodeInfo, err3 := controllerHelpers.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr)
+	if err3 != nil {
+		funtions.ErrorResponse(c, "File encoding error", err3.Error())
+		return
+	}
+
+	funtions.SuccessResponse(c, "File uploaded and encoded successfully", gin.H{
 		"count": 1,
 		"data": gin.H{
-			"filename": uploadedFileName,
-			"size":     file.Size,
+			"output":       encodeInfo,
+			"orifinalSize": file.Size,
 		},
 	})
 }

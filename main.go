@@ -58,10 +58,10 @@ func main() {
 	docs.SwaggerInfo.Description = "This microservice deals with the upload and optinally compress files with the help of FFMPEG library as quality passed by user"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	err := router.Run("localhost:" + port)
-
 	fmt.Printf("APi is running at http://localhost:" + port + "\n")
 	fmt.Printf("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
+
+	err := router.Run("localhost:" + port)
 
 	if err != nil {
 		if strings.ContainsAny(err.Error(), "bind: address already in use") == false {

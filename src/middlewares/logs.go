@@ -12,6 +12,7 @@ func LogsMiddleware() gin.HandlerFunc {
 	mode := funtions.DotEnvVariable("GIN_MODE")
 
 	if mode == "debug" {
+		gin.SetMode(gin.DebugMode)
 		gin.ForceConsoleColor()
 	} else {
 		gin.SetMode(gin.ReleaseMode)
@@ -40,8 +41,11 @@ func LogsMiddleware() gin.HandlerFunc {
 			},
 			SkipPaths: []string{
 				"/swagger/index.html",
+				"/swagger/swagger-ui.css.map",
 				"/swagger/swagger-ui.css",
+				"/swagger/swagger-ui-bundle.js.map",
 				"/swagger/swagger-ui-bundle.js",
+				"/swagger/swagger-ui-standalone-preset.js.map",
 				"/swagger/swagger-ui-standalone-preset.js",
 				"/swagger/doc.json",
 				"/swagger/favicon-32x32.png",
