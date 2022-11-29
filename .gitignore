@@ -32,5 +32,4 @@ logs/*
 /server-error.log
 /server-success.log
 /video-conversion-service
-/go.sum
 /air-temp
