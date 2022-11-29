@@ -6,8 +6,7 @@ WORKDIR /app
 
 COPY go.mod ./
 RUN go install github.com/cosmtrek/air@latest
-RUN go mod download github.com/swaggo/swag
-RUN go install github.com/swaggo/swag/cmd/swag
+RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go mod vendor
 RUN go mod tidy
 RUN apk add ffmpeg
