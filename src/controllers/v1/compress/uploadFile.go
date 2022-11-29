@@ -2,6 +2,7 @@ package compress
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"video-conversion-service/src/configs/funtions"
 	"video-conversion-service/src/configs/types"
 	"video-conversion-service/src/services"
@@ -47,14 +48,29 @@ func UploadFile(gtx *gin.Context) {
 
 	ffmpegStr := gtx.PostForm("ffmpegStr")
 	outputFormat := gtx.PostForm("outputFormat")
-	encodedFileName, err2 := services.SaveWithFfmpegTool(uploadedFileName, destinationPath, ffmpegStr, outputFormat)
-	if err2 != nil {
-		funtions.ErrorResponse(gtx, "File encoding error", err2.Error())
-		return
-	}
 
-	funtions.SuccessResponse(gtx, "File uploaded and encoded successfully", 1, gin.H{
-		"fileName":     destinationPath + "/" + encodedFileName,
+	fileDestWithFfmpeg := services.GenerateFfmpegFileName(uploadedFileName, outputFormat)
+	fileDestWithFfmpeg = destinationPath + "/" + fileDestWithFfmpeg
+	fileInputWithFfmpeg := destinationPath + "/" + uploadedFileName
+
+	apiResponseMessage := "File uploaded and encoded successfully"
+	if gtx.PostForm("encodeWaiting") == "true" {
+		_, err2 := services.SaveWithFfmpegTool(fileInputWithFfmpeg, fileDestWithFfmpeg, ffmpegStr)
+		if err2 != nil {
+			funtions.ErrorResponse(gtx, "File encoding error", err2.Error())
+			return
+		}
+	} else {
+		apiResponseMessage = "File uploaded and put in encoding queue successfully"
+		go func() {
+			_, err2 := services.SaveWithFfmpegTool(fileInputWithFfmpeg, fileDestWithFfmpeg, ffmpegStr)
+			if err2 != nil {
+				log.Println("File encoding of " + uploadedFileName + "error " + err2.Error())
+			}
+		}()
+	}
+	funtions.SuccessResponse(gtx, apiResponseMessage, 1, gin.H{
+		"fileName":     fileDestWithFfmpeg,
 		"orifinalSize": file.Size,
 	})
 }

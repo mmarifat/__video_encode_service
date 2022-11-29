@@ -8,18 +8,18 @@ import (
 	"strings"
 )
 
-func SaveWithFfmpegTool(fileName string, destinationPath string, ffmpegString string, outputFormat string) (string, error) {
-	inputFile := destinationPath + "/" + fileName
-
+func GenerateFfmpegFileName(fileName string, outputFormat string) string {
 	extension := filepath.Ext(fileName)
-	destinationWithFfmpeg := strings.TrimSuffix(fileName, extension)
+	generatedFileName := strings.TrimSuffix(fileName, extension)
 	if len(outputFormat) > 0 {
-		destinationWithFfmpeg += "--enc." + outputFormat
+		generatedFileName += "--enc." + outputFormat
 	} else {
-		destinationWithFfmpeg += "--enc" + extension
+		generatedFileName += "--enc" + extension
 	}
-	destinationWithFfmpegFile := destinationPath + "/" + destinationWithFfmpeg
+	return generatedFileName
+}
 
+func SaveWithFfmpegTool(fileInputWithFfmpeg string, fileDestWithFfmpeg string, ffmpegString string) (string, error) {
 	if len(ffmpegString) < 1 {
 		//Width: 1280
 		//Height: 720
@@ -32,7 +32,7 @@ func SaveWithFfmpegTool(fileName string, destinationPath string, ffmpegString st
 		//Audio Sample Rate: 44.100kHz
 		ffmpegString = "-filter:v fps=25 -vf scale=1280:720 -b:v 880k -b:a 128k -c:v h264 -c:a aac -ac 2 -ar 44100"
 	}
-	ffmpegStringArgs := `ffmpeg -i ` + inputFile + ` ` + ffmpegString + ` ` + destinationWithFfmpegFile
+	ffmpegStringArgs := `ffmpeg -i ` + fileInputWithFfmpeg + ` ` + ffmpegString + ` ` + fileDestWithFfmpeg
 	ffmpegStringArgs = regexp.MustCompile(`\s+`).ReplaceAllString(ffmpegStringArgs, ` `)
 	ffmpegStringArgs = strings.ReplaceAll(ffmpegStringArgs, "\"", "'")
 	args := strings.Split(ffmpegStringArgs, ` `)
@@ -44,9 +44,9 @@ func SaveWithFfmpegTool(fileName string, destinationPath string, ffmpegString st
 	}
 
 	// remove previous original file
-	if osErr := os.Remove(inputFile); osErr != nil {
+	if osErr := os.Remove(fileInputWithFfmpeg); osErr != nil {
 		return "", osErr
 	}
 
-	return destinationWithFfmpeg, nil
+	return fileDestWithFfmpeg, nil
 }
