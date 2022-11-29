@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:1.19.3-alpine
 
 ENV GO111MODULE=on
 ENV PORT=7000
