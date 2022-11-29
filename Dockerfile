@@ -12,5 +12,4 @@ RUN go mod tidy
 RUN apk add ffmpeg
 COPY . /app
 RUN swag init
-RUN go build -o mai
-ENTRYPOINT CompileDaemon --build="go build -o main" --command=./main
+ENTRYPOINT go build -o main
