@@ -1,23 +1,15 @@
 package middlewares
 
 import (
-	"github.com/axiaoxin-com/goutils"
 	"github.com/axiaoxin-com/ratelimiter"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
 	"strconv"
 	"time"
 	"video-conversion-service/src/configs/funtions"
 )
 
 func RateLimiter(router *gin.RouterGroup) {
-	// Put a token into the token bucket every 1s
-	// Maximum 1 request allowed per second
-	rdb, err := goutils.NewRedisClient(&redis.Options{})
-	if err != nil {
-		panic(err)
-	}
-	router.Use(ratelimiter.GinRedisRatelimiter(rdb, ratelimiter.GinRatelimiterConfig{
+	router.Use(ratelimiter.GinMemRatelimiter(ratelimiter.GinRatelimiterConfig{
 		// config: rate limiter key using client IP Address
 		LimitKey: func(c *gin.Context) string {
 			return c.ClientIP()

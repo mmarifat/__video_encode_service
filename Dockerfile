@@ -1,17 +1,24 @@
-FROM golang:latest
+FROM golang:1.19-alpine
 
 ENV GO111MODULE=on
-ENV PORT=9595
 
-WORKDIR /app
-COPY go.mod /app
-COPY go.sum /app
+RUN apk add redis
+RUN apk add ffmpeg
 
-RUN go install -mod=mod github.com/swaggo/swag/cmd/swag
-RUN go install -mod=mod github.com/githubnemo/CompileDaemon
+WORKDIR /video-conversion-service
+
+COPY go.mod ./
+COPY go.sum ./
 
 RUN go mod vendor
 RUN go mod download
 RUN go mod tidy
-COPY . /app
-ENTRYPOINT CompileDaemon --build="go build -o video-conversion-service" --command=./video-conversion-service
+
+COPY vendor /video-conversion-service
+COPY . /video-conversion-service
+
+RUN go build -o /video-conversion-service
+
+ENV PORT=9595
+
+CMD ["/video-conversion-service/video-conversion-service"]
