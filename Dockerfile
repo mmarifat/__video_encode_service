@@ -1,4 +1,4 @@
-# GO Repo base repo
+# syntax=docker/dockerfile:1
 FROM golang:1.19.3-alpine as builder
 
 WORKDIR /app
@@ -10,25 +10,6 @@ RUN go install github.com/cosmtrek/air@latest
 RUN go mod vendor
 RUN go mod tidy
 
-COPY . .
+COPY *.go ./
 
-# Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
-
-# GO Repo base repo
-FROM alpine:latest
-
-RUN apk --no-cache add ca-certificates curl ffmpeg
-
-RUN mkdir /app
-
-WORKDIR /app/
-
-# Copy the Pre-built binary file from the previous stage
-COPY --from=builder /app/main .
-
-# Expose port 8000
-EXPOSE 8000
-
-# Run Executable
-CMD ["./main"]
+RUN go build -o /docker-gs-ping
