@@ -3,9 +3,8 @@ VIDEO-CONVERSION-SERVICE
 ## Requirements
 
 - go (version 1.19+)
-- air
 - ffmpeg
-- redis
+- air (only for development locally)
 
 ## Getting Started
 
