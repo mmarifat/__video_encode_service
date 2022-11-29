@@ -1,16 +1,36 @@
-FROM golang:1.19.3-alpine
+# GO Repo base repo
+FROM golang:1.19.3-alpine as builder
 
-ENV GO111MODULE=on
-ENV PORT=7000
-WORKDIR /go/src/app
-COPY go.mod /go/src/app
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
 
-RUN go install github.com/cosmtrek/air@latest
-RUN go install github.com/swaggo/swag/cmd/swag@latest
+COPY go.mod ./
+
+# Download all the dependencies
+RUN go mod download
 RUN go mod vendor
 RUN go mod tidy
-RUN apk add ffmpeg
-COPY . /go/src/app
-RUN swag init
-RUN go build -o /go/src/app/docker-gs-ping
-CMD [ "/go/src/app/docker-gs-ping" ]
+
+COPY . .
+
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+# GO Repo base repo
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates curl ffmpeg
+
+RUN mkdir /app
+
+WORKDIR /app/
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
+
+# Expose port 8000
+EXPOSE 8000
+
+# Run Executable
+CMD ["./main"]
