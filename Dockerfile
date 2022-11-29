@@ -2,8 +2,6 @@
 
 FROM golang:1.19.3-alpine
 
-WORKDIR /app
-
 COPY go.mod ./
 RUN go install github.com/cosmtrek/air@latest
 RUN go install github.com/swaggo/swag/cmd/swag@latest
