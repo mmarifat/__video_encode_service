@@ -12,6 +12,7 @@ RUN apk add ffmpeg
 
 COPY *.go ./
 
+RUN swag init
 RUN go build -o /docker-gs-ping
 
 EXPOSE 8080
