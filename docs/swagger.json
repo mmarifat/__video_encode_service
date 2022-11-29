@@ -1,0 +1,148 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/compress/file": {
+            "post": {
+                "description": "execution will upload any file in compress format",
+                "consumes": [
+                    "multipart/form-data; boundary=normal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "COMPRESS"
+                ],
+                "summary": "upload any file in compress format",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "-filter:v fps=25 -vf scale=1280:720 -b:v 880k -b:a 128k -c:v h264 -c:a aac -ac 2 -ar 44100",
+                        "name": "ffmpegStr",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "default": "mp4",
+                        "name": "outputFormat",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "default": "files-encoded",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/raw/file": {
+            "post": {
+                "description": "execution will upload any file in raw format",
+                "consumes": [
+                    "multipart/form-data; boundary=normal"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RAW"
+                ],
+                "summary": "upload any file in raw format",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "default": "files",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
+        "/status": {
+            "get": {
+                "description": "execution will return gin and cpu status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "STATUS"
+                ],
+                "summary": "returns gin and cpu status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.ResponseObject"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "types.ResponseObject": {
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string"
+                },
+                "nonce": {
+                    "type": "integer"
+                },
+                "payload": {},
+                "status": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

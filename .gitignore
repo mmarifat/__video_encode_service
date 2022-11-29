@@ -10,12 +10,10 @@ main
 
 # exclude everything
 uploaded/*
-docs/*
 logs/*
 
 # exception to the rule
 !uploaded/.gitkeep
-!docs/.gitkeep
 !logs/.gitkeep
 
 # Test binary, built with `go test -c`

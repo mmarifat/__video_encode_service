@@ -1,0 +1,97 @@
+definitions:
+  types.ResponseObject:
+    properties:
+      msg:
+        type: string
+      nonce:
+        type: integer
+      payload: {}
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /compress/file:
+    post:
+      consumes:
+      - multipart/form-data; boundary=normal
+      description: execution will upload any file in compress format
+      parameters:
+      - default: -filter:v fps=25 -vf scale=1280:720 -b:v 880k -b:a 128k -c:v h264
+          -c:a aac -ac 2 -ar 44100
+        in: formData
+        name: ffmpegStr
+        type: string
+      - in: formData
+        name: name
+        type: string
+      - default: mp4
+        in: formData
+        name: outputFormat
+        type: string
+      - default: files-encoded
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ResponseObject'
+      summary: upload any file in compress format
+      tags:
+      - COMPRESS
+  /raw/file:
+    post:
+      consumes:
+      - multipart/form-data; boundary=normal
+      description: execution will upload any file in raw format
+      parameters:
+      - in: formData
+        name: name
+        type: string
+      - default: files
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ResponseObject'
+      summary: upload any file in raw format
+      tags:
+      - RAW
+  /status:
+    get:
+      consumes:
+      - application/json
+      description: execution will return gin and cpu status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ResponseObject'
+      summary: returns gin and cpu status
+      tags:
+      - STATUS
+swagger: "2.0"
