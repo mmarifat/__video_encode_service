@@ -1,15 +1,17 @@
 # syntax=docker/dockerfile:1
 FROM golang:1.19.3-alpine as builder
 
+ENV GO111MODULE=on
+ENV PORT=9595
 WORKDIR /app
+COPY go.mod /app
+COPY go.sum /app
 
-COPY go.mod ./
+RUN go install -mod=mod github.com/swaggo/swag/cmd/swag
+RUN go install -mod=mod github.com/githubnemo/CompileDaemon
 
-# Download all the dependencies
-RUN go install github.com/cosmtrek/air@latest
 RUN go mod vendor
+RUN go mod download
 RUN go mod tidy
-
-COPY *.go ./
-
-RUN go build -o /docker-gs-ping
+COPY . /app
+ENTRYPOINT CompileDaemon --build="go build -o video-conversion-service" --command=./video-conversion-service
