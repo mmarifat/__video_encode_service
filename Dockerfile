@@ -8,7 +8,7 @@ WORKDIR /app
 COPY go.mod ./
 
 # Download all the dependencies
-RUN go mod download
+RUN go install github.com/cosmtrek/air@latest
 RUN go mod vendor
 RUN go mod tidy
 
