@@ -13,10 +13,9 @@ RUN go mod vendor
 RUN go mod download
 RUN go mod tidy
 
-COPY vendor /video-conversion-service
 COPY . /video-conversion-service
 
-RUN go build -o /video-conversion-service
+RUN go build -o .
 
 ENV PORT=9595
 
