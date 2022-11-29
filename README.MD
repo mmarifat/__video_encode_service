@@ -5,6 +5,7 @@ VIDEO-CONVERSION-SERVICE
 - go (version 1.19+)
 - air
 - ffmpeg
+- redis
 
 ## Getting Started
 
@@ -33,7 +34,9 @@ Build for production
 ```bash
 $ swag init
 # then
-$ go build
+$ go build -o main
+# then
+$ ./main
 ```
 
 ## Logging
