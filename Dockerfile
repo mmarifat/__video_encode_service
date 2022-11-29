@@ -5,7 +5,6 @@ FROM golang:1.18.2-alpine
 WORKDIR /app
 
 COPY go.mod ./
-COPY go.sum ./
 RUN go install github.com/cosmtrek/air@latest
 RUN go mod vendor
 RUN go mod tidy
