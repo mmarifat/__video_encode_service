@@ -1,22 +1,15 @@
-# syntax=docker/dockerfile:1
+FROM golang:latest
 
-FROM golang:1.19.3-alpine
-
+ENV GO111MODULE=on
+ENV PORT=7000
 WORKDIR /app
+COPY go.mod /app
 
-COPY go.mod ./
 RUN go install github.com/cosmtrek/air@latest
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go mod vendor
 RUN go mod tidy
 RUN apk add ffmpeg
-
-COPY *.go ./
-RUN ls -ltrh
-
+COPY . /app
 RUN swag init
-RUN go build
-
-EXPOSE 8080
-
-CMD [ "/docker-gs-ping" ]
+ENTRYPOINT CompileDaemon --build="go build -o main" --command=./main
