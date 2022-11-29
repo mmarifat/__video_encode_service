@@ -6,6 +6,7 @@ WORKDIR /app
 
 COPY go.mod ./
 RUN go install github.com/cosmtrek/air@latest
+RUN go mod download github.com/swaggo/swag
 RUN go install github.com/swaggo/swag/cmd/swag
 RUN go mod vendor
 RUN go mod tidy
