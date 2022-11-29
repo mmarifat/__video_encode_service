@@ -5,7 +5,6 @@ ENV GO111MODULE=on
 ENV PORT=9595
 WORKDIR /app
 COPY go.mod /app
-COPY go.sum /app
 
 RUN go install -mod=mod github.com/swaggo/swag/cmd/swag
 RUN go install -mod=mod github.com/githubnemo/CompileDaemon
