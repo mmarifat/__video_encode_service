@@ -2,7 +2,6 @@ FROM golang:1.19-alpine
 
 ENV GO111MODULE=on
 
-RUN apk add redis
 RUN apk add ffmpeg
 
 WORKDIR /video-conversion-service
