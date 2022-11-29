@@ -4,14 +4,14 @@ FROM golang:1.19.3-alpine
 
 WORKDIR /app
 
-COPY go.mod ./
+COPY go.mod .
 RUN go install github.com/cosmtrek/air@latest
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go mod vendor
 RUN go mod tidy
 RUN apk add ffmpeg
 
-COPY *.go ./
+COPY *.go .
 
 RUN swag init
 RUN go build
