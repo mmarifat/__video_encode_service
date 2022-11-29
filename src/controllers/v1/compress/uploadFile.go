@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"video-conversion-service/src/configs/funtions"
 	"video-conversion-service/src/configs/types"
-	services2 "video-conversion-service/src/services"
+	"video-conversion-service/src/services"
 )
 
 // UploadFile @BasePath /api/v1
@@ -20,37 +20,41 @@ import (
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
 // @Router /compress/file [post]
-func UploadFile(c *gin.Context) {
+func UploadFile(gtx *gin.Context) {
 	var form types.FileCompressJson
-	if bindError := c.ShouldBind(&form); bindError != nil {
-		funtions.ErrorResponse(c, "File upload mulfuntion", bindError.Error())
+	if bindError := gtx.ShouldBind(&form); bindError != nil {
+		funtions.ErrorResponse(gtx, "File upload mulfuntion", bindError.Error())
 		return
 	}
 
-	file, err := c.FormFile("file")
+	file, err := gtx.FormFile("file")
 	if err != nil {
-		funtions.ErrorResponse(c, "File form not found", err.Error())
+		funtions.ErrorResponse(gtx, "File form not found", err.Error())
 		return
 	}
 
-	fileName := c.PostForm("name")
-	dirType := c.PostForm("type")
-	uploadedFileName, err := services2.SaveFileToDir(c, file, fileName, dirType)
-	if err != nil {
-		funtions.ErrorResponse(c, "File upload error", err.Error())
+	fileName := gtx.PostForm("name")
+	dirType := gtx.PostForm("type")
+
+	mountPath := gtx.PostForm("mountPath")
+	destinationPath := funtions.MakeDirSync(mountPath, dirType)
+
+	uploadedFileName, err1 := services.SaveFileToDir(gtx, file, fileName, destinationPath)
+	if err1 != nil {
+		funtions.ErrorResponse(gtx, "File upload error", err1.Error())
 		return
 	}
 
-	ffmpegStr := c.PostForm("ffmpegStr")
-	outputFormat := c.PostForm("outputFormat")
-	encodedFileName, err := services2.SaveWithFfmpegTool(uploadedFileName, dirType, ffmpegStr, outputFormat)
-	if err != nil {
-		funtions.ErrorResponse(c, "File encoding error", err.Error())
+	ffmpegStr := gtx.PostForm("ffmpegStr")
+	outputFormat := gtx.PostForm("outputFormat")
+	encodedFileName, err2 := services.SaveWithFfmpegTool(uploadedFileName, destinationPath, ffmpegStr, outputFormat)
+	if err2 != nil {
+		funtions.ErrorResponse(gtx, "File encoding error", err2.Error())
 		return
 	}
 
-	funtions.SuccessResponse(c, "File uploaded and encoded successfully", 1, gin.H{
-		"fileName":     encodedFileName,
+	funtions.SuccessResponse(gtx, "File uploaded and encoded successfully", 1, gin.H{
+		"fileName":     destinationPath + "/" + encodedFileName,
 		"orifinalSize": file.Size,
 	})
 }

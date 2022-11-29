@@ -1,17 +1,22 @@
 package funtions
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
-func MakeDirSync(dirType string) string {
-	destination := "uploaded/"
+func MakeDirSync(mountPath string, dirType string) string {
+	if strings.HasSuffix(mountPath, "/") == false {
+		mountPath += "/"
+	}
 	if len(dirType) > 0 {
-		destination += dirType
+		mountPath += dirType
 	} else {
-		destination += "files"
+		mountPath += "files"
 	}
 
-	if _, err := os.Stat(destination); os.IsNotExist(err) {
-		os.Mkdir(destination, os.ModePerm)
+	if _, err := os.Stat(mountPath); os.IsNotExist(err) {
+		os.Mkdir(mountPath, os.ModePerm)
 	}
-	return destination
+	return mountPath
 }

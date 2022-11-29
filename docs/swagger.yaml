@@ -23,6 +23,11 @@ paths:
         in: formData
         name: ffmpegStr
         type: string
+      - default: /mnt/streamstudio
+        in: formData
+        name: mountPath
+        required: true
+        type: string
       - in: formData
         name: name
         type: string
@@ -56,6 +61,11 @@ paths:
       - multipart/form-data; boundary=normal
       description: execution will upload any file in raw format
       parameters:
+      - default: /mnt/streamstudio
+        in: formData
+        name: mountPath
+        required: true
+        type: string
       - in: formData
         name: name
         type: string

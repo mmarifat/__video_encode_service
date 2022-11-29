@@ -6,13 +6,10 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"video-conversion-service/src/configs/funtions"
 )
 
-func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string, outputFormat string) (string, error) {
-	destination := funtions.MakeDirSync(dirType)
-
-	inputFile := destination + "/" + fileName
+func SaveWithFfmpegTool(fileName string, destinationPath string, ffmpegString string, outputFormat string) (string, error) {
+	inputFile := destinationPath + "/" + fileName
 
 	extension := filepath.Ext(fileName)
 	destinationWithFfmpeg := strings.TrimSuffix(fileName, extension)
@@ -21,7 +18,7 @@ func SaveWithFfmpegTool(fileName string, dirType string, ffmpegString string, ou
 	} else {
 		destinationWithFfmpeg += "--enc" + extension
 	}
-	destinationWithFfmpegFile := destination + "/" + destinationWithFfmpeg
+	destinationWithFfmpegFile := destinationPath + "/" + destinationWithFfmpeg
 
 	if len(ffmpegString) < 1 {
 		//Width: 1280

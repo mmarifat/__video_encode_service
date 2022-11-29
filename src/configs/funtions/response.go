@@ -6,17 +6,17 @@ import (
 	"video-conversion-service/src/configs/types"
 )
 
-func SuccessResponse(c *gin.Context, msg string, count int, data any) {
+func SuccessResponse(gtx *gin.Context, msg string, count int, data any) {
 	resp := &types.ResponseObject{Statuscode: http.StatusOK, Message: msg, Payload: gin.H{
 		"count": count,
 		"data":  data,
 	}}
-	c.Header("Content-Type", "application/json")
-	c.JSON(resp.Statuscode, resp)
+	gtx.Header("Content-Type", "application/json")
+	gtx.JSON(resp.Statuscode, resp)
 }
 
-func ErrorResponse(c *gin.Context, msg string, error any) {
+func ErrorResponse(gtx *gin.Context, msg string, error any) {
 	resp := &types.ErrorObject{Statuscode: http.StatusBadRequest, Message: msg, Error: error}
-	c.Header("Content-Type", "application/json")
-	c.JSON(resp.Statuscode, resp)
+	gtx.Header("Content-Type", "application/json")
+	gtx.JSON(resp.Statuscode, resp)
 }

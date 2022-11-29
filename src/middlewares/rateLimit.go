@@ -11,13 +11,13 @@ import (
 func RateLimiter(router *gin.RouterGroup) {
 	router.Use(ratelimiter.GinMemRatelimiter(ratelimiter.GinRatelimiterConfig{
 		// config: rate limiter key using client IP Address
-		LimitKey: func(c *gin.Context) string {
-			return c.ClientIP()
+		LimitKey: func(gtx *gin.Context) string {
+			return gtx.ClientIP()
 		},
 		// config: how to respond when limiting
-		LimitedHandler: func(c *gin.Context) {
-			funtions.ErrorResponse(c, "Too many requests", nil)
-			c.Abort()
+		LimitedHandler: func(gtx *gin.Context) {
+			funtions.ErrorResponse(gtx, "Too many requests", nil)
+			gtx.Abort()
 			return
 		},
 		// config: return ratelimiter token fill interval and bucket size (every 1 second)

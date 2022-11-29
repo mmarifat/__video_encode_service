@@ -20,28 +20,32 @@ import (
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
 // @Router /raw/file [post]
-func UploadFile(c *gin.Context) {
+func UploadFile(gtx *gin.Context) {
 	var form types.FileJson
-	if bindError := c.ShouldBind(&form); bindError != nil {
-		funtions.ErrorResponse(c, "File upload mulfuntion", bindError.Error())
+	if bindError := gtx.ShouldBind(&form); bindError != nil {
+		funtions.ErrorResponse(gtx, "File upload mulfuntion", bindError.Error())
 		return
 	}
 
-	file, err := c.FormFile("file")
+	file, err := gtx.FormFile("file")
 	if err != nil {
-		funtions.ErrorResponse(c, "File form not found", err.Error())
+		funtions.ErrorResponse(gtx, "File form not found", err.Error())
 		return
 	}
 
-	fileName := c.PostForm("name")
-	dirType := c.PostForm("type")
-	uploadedFileName, err := services.SaveFileToDir(c, file, fileName, dirType)
-	if err != nil {
-		funtions.ErrorResponse(c, "File upload error", err.Error())
+	fileName := gtx.PostForm("name")
+	dirType := gtx.PostForm("type")
+
+	mountPath := gtx.PostForm("mountPath")
+	destinationPath := funtions.MakeDirSync(mountPath, dirType)
+
+	uploadedFileName, err1 := services.SaveFileToDir(gtx, file, fileName, destinationPath)
+	if err1 != nil {
+		funtions.ErrorResponse(gtx, "File upload error", err1.Error())
 	}
 
-	funtions.SuccessResponse(c, "File uploaded successfully", 1, gin.H{
-		"filename": uploadedFileName,
+	funtions.SuccessResponse(gtx, "File uploaded successfully", 1, gin.H{
+		"filename": destinationPath + "/" + uploadedFileName,
 		"size":     file.Size,
 	})
 }

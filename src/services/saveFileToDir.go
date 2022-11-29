@@ -10,8 +10,7 @@ import (
 	"video-conversion-service/src/configs/funtions"
 )
 
-func SaveFileToDir(c *gin.Context, file *multipart.FileHeader, fileName string, dirType string) (string, error) {
-	destination := funtions.MakeDirSync(dirType)
+func SaveFileToDir(gtx *gin.Context, file *multipart.FileHeader, fileName string, destinationPath string) (string, error) {
 	extension := filepath.Ext(file.Filename)
 
 	if len(fileName) < 1 {
@@ -21,9 +20,9 @@ func SaveFileToDir(c *gin.Context, file *multipart.FileHeader, fileName string, 
 	fileName = regexp.MustCompile(`\s+`).ReplaceAllString(fileName, `-`)
 	fileName += "-" + strconv.Itoa(int(funtions.MakeTimestamp()))
 	fileName += extension
-	destination += "/" + fileName
+	destinationPath += "/" + fileName
 
-	if err := c.SaveUploadedFile(file, destination); err != nil {
+	if err := gtx.SaveUploadedFile(file, destinationPath); err != nil {
 		return "", err
 	}
 

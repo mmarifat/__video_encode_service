@@ -16,6 +16,6 @@ import (
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
 // @Router /status [get]
-func ApiStatus(c *gin.Context) {
-	cpuCtrl.GinHandler(c)
+func ApiStatus(gtx *gin.Context) {
+	cpuCtrl.GinHandler(gtx)
 }
