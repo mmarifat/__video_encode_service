@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.19.3-alpine as builder
+FROM golang:latest
 
 ENV GO111MODULE=on
 ENV PORT=9595
