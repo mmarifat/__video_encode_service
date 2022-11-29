@@ -1,8 +1,6 @@
 # GO Repo base repo
 FROM golang:1.19.3-alpine as builder
 
-RUN mkdir /app
-ADD . /app
 WORKDIR /app
 
 COPY go.mod ./
