@@ -34,9 +34,9 @@ Build for production
 ```bash
 $ swag init
 # then
-$ go build -o main
+$ go build -o video-conversion-service
 # then
-$ ./main
+$ ./video-conversion-service
 ```
 
 ## Logging
