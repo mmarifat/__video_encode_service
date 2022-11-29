@@ -1,0 +1,217 @@
+#!/usr/bin/env groovy
+
+
+pipeline {
+    agent {
+        node {
+            label 'docker-node'
+        }
+    }
+    environment {
+        DOCKERHUB_ACCOUNT = "wtvglobalproductdevelopment"
+	DOCKER_PASS = credentials('DOCKER_PASS') 
+	GCLOUD = credentials('GCLOUD')
+        GIT_REPO_NAME = env.GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+	GIT_REVISION = "${sh(returnStdout: true, script: 'git rev-parse HEAD').trim()}"
+	DEPLOY_TAG = "${env.DOCKERHUB_ACCOUNT}/${env.GIT_REPO_NAME}:${env.GIT_REVISION}"	    
+	COMMIT_MESSAGE = "${sh(returnStdout: true, script: 'git log -1 --pretty=format:"%s"').trim()}"
+	STATUS = '$BUILD_STATUS'   
+	GIT_USER =  "${sh(returnStdout: true, script: 'git log -1 --pretty=format:"%an"').trim()}"    
+    }
+    stages {
+        stage ('Checkout') {
+            when {
+                   anyOf {
+		     branch 'develop'
+	             branch 'staging';
+                     branch 'k8s-prod';
+		     branch 'uat'
+                   }
+            }
+            steps {
+                checkout scm: [
+                    $class: 'GitSCM',
+                    branches: scm.branches,
+                    doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
+                    extensions: [[$class: 'CloneOption', noTags: false, shallow: false, depth: 0, reference: '']],
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ]
+            }
+        }
+        stage ('Build') {
+            when {
+                   anyOf {
+	             branch 'develop';
+                     branch 'staging';
+                     branch 'k8s-prod'
+                   }
+            }
+            steps {
+                println "Building version: ${env. GIT_TAG}"
+                script {
+    		    wrap([$class: 'BuildUser']) {
+		    if (env.BUILD_USER == null ) {
+	    	        env.USER = "${sh(returnStdout: true, script: 'git log -1 --pretty=format:"%an"').trim()}"
+	    	    } else {
+			env.USER = env.BUILD_USER
+	    	    }
+                    env.DOCKERHUB_ACCOUNT = 'wtvglobalproductdevelopment'
+                    env.GIT_REPO_NAME = env.GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+                    env.GIT_REVISION = "${sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()}"
+                    env.CONFIG_ENV = "${env.GIT_BRANCH == 'staging' ? 'DEV' : 'STG'}"            
+                    if (env.GIT_BRANCH == 'staging') {
+			sh "cp /home/wtv/env/.env.presenter-staging .env.production"
+			sh "DOCKER_BUILDKIT=1 docker build --tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' ."
+                        sh "docker tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-STG"
+                    } else if (env.GIT_BRANCH == 'k8s-prod') {
+			  sh "cp /home/wtv/env/.env.presenter-production .env.production"
+			 sh "DOCKER_BUILDKIT=1 docker build --tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' ."
+                        sh "docker tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-PROD"
+		    } else if (env.GIT_BRANCH == 'develop') {
+			  sh "cp /home/wtv/env/.env.broad-dev .env.production"
+			  sh "DOCKER_BUILDKIT=1 docker build --tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' ."
+                        sh "docker tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-DEV"
+		    } else {
+			 sh "cp /home/wtv/env/.env.presenter-production .env.production"
+			sh "DOCKER_BUILDKIT=1 docker build --tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':${env.GIT_BRANCH} ."    
+		   }	    
+                }
+            }
+        }
+        }
+       stage ('Push') {
+            when {
+                   anyOf {
+	             branch 'develop';
+                     branch 'staging';
+                     branch 'k8s-prod'
+                   }
+            }
+            steps {
+                script {
+                    if (env.GIT_BRANCH == 'staging') {
+			sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'"
+                        sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-STG"
+                    } else if (env.GIT_BRANCH == 'k8s-prod') {
+			sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'"
+                        sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-PROD"
+		    } else if (env.GIT_BRANCH == 'develop') {
+			sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'"
+                        sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-DEV"
+		    }else {
+			sh "docker push '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':${env.TAG_NAME}"  
+		    } 
+                }
+            }
+        }
+        stage ('Deploy to dev') {
+            when {
+                   anyOf {
+                     branch 'develop'
+                   }
+            }
+            environment {
+                NAMESPACE = 'ew-dev'
+                CHART = 'video-conversion-service'
+                CHARTS_DIR = "${sh(script:'mktemp -d | xargs echo -n', returnStdout: true)}"
+                TOKEN = credentials('k8s-token')
+            }
+            steps {
+                script {
+		    println "Deploying ${env.GIT_BRANCH} branch to ${env.SERVER}"
+                    sh(script: """
+                         git clone https://ctvient28:${env.TOKEN}@github.com/world-television/wtv.helmcharts -b main ${env.CHARTS_DIR}
+                         echo ${env.CHARTS_DIR}/
+			""")
+                        sh "KUBECONFIG=${env.CHARTS_DIR}/k8s.yml /usr/local/bin/helm upgrade --debug --history-max=3 --install --set image.tag='${env.GIT_REVISION}'-DEV --namespace=${env.NAMESPACE} --timeout=10m0s --wait=true ${env.CHART} ${env.CHARTS_DIR}/charts/${env.CHART}"
+		        sh "rm -rf ${env.CHARTS_DIR}"
+                }	
+            }
+        }
+        stage ('Deploy to kubernetes staging') {
+            when {
+                   anyOf {
+                     branch 'staging'
+                   }
+            }
+            environment {
+                NAMESPACE = 'ew-stg'
+                CHART = 'video-conversion-service'
+                CHARTS_DIR = "${sh(script:'mktemp -d | xargs echo -n', returnStdout: true)}"
+                TOKEN = credentials('k8s-token')
+            }
+            steps {
+                script {
+                    println "Deploying ${env.GIT_BRANCH} branch to ${env.SERVER}"
+                    sh(script: """
+                         git clone https://ctvient28:${env.TOKEN}@github.com/world-television/wtv.helmcharts -b main ${env.CHARTS_DIR}
+                         echo ${env.CHARTS_DIR}/
+                         export KUBECONFIG=${env.CHARTS_DIR}/k8s.yml
+                        /usr/local/bin/helm upgrade --debug --history-max=5 --install --set image.tag='${env.GIT_REVISION}'-STG --namespace=${env.NAMESPACE} --timeout=10m0s --wait=true ${env.CHART} ${env.CHARTS_DIR}/charts/${env.CHART}
+		        rm -rf ${env.CHARTS_DIR}
+                    """)
+                }
+            }
+        }
+        stage ('Deploy to kubernetes prod ') {
+            environment {
+                NAMESPACE = 'ew'
+                CHART = 'video-conversion-service'
+                CHARTS_DIR = "${sh(script:'mktemp -d | xargs echo -n', returnStdout: true)}"
+                TOKEN = credentials('k8s-token')
+            }
+            when {
+                branch 'k8s-prod';
+            }
+            steps {
+                script {
+                    println "Deploying ${env.GIT_BRANCH} branch to ${env.SERVER}"
+                    sh(script: """
+                         git clone https://ctvient28:${env.TOKEN}@github.com/world-television/wtv.helmcharts -b main ${env.CHARTS_DIR}
+                         echo ${env.CHARTS_DIR}/
+                         export KUBECONFIG=${env.CHARTS_DIR}/k8s-prod.yml
+                        /usr/local/bin/helm upgrade -f ${env.CHARTS_DIR}/charts/${env.CHART}/values-prod.yaml --debug --history-max=5 --install --set image.tag='${env.GIT_REVISION}'-PROD --namespace=${env.NAMESPACE} --timeout=10m0s --wait=true ${env.CHART} ${env.CHARTS_DIR}/charts/${env.CHART}
+		        rm -rf ${env.CHARTS_DIR}
+                    """)
+                }
+            }
+        }
+        stage ('Deploy to uat ') {
+            when {
+                branch 'uat'
+            }
+            steps {
+                script {
+	            input "Deploy ?"
+		    wrap([$class: 'BuildUser']) {
+		    if (env.BUILD_USER == null ) {
+	    	        env.USER = "${sh(returnStdout: true, script: 'git log -1 --pretty=format:"%an"').trim()}"
+	    	    } else {
+			env.USER = env.BUILD_USER
+	    	    }
+                    def servers = ['4130-stst-20-console-1.unbn-win.unit.net', '4130-stst-20-console-2.unbn-win.unit.net']
+                    def config = '.env.production'
+                    buildAndDeploy(servers, config)
+                    println "Deploying to ${servers} from ${env.BRANCH_NAME} branch."
+                }
+            }
+          }
+	}
+    }
+    post {
+        always {
+            googlechatnotification (
+		        message: "[${env.STATUS}] after ${currentBuild.durationString.replace(' and counting', '')} by ${env.USER} ${BUILD_URL} (Commit Message: ${env.COMMIT_MESSAGE})",
+                url: 'https://chat.googleapis.com/v1/spaces/AAAAp1kMdNc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=ZS14gZ4j5u--OCo3q4LodPYSt02xbUs3h9ggGZu5hT0%3D',
+                notifyAborted: true,
+                notifyBackToNormal: true,
+                notifyFailure: true,
+                notifyNotBuilt: true,
+                notifySuccess: true,
+                notifyUnstable: true,
+                sameThreadNotification: true,
+                suppressInfoLoggers: true
+            )
+        }
+    }
+}
