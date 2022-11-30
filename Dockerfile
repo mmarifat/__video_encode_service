@@ -6,7 +6,7 @@ RUN apk add ffmpeg
 
 WORKDIR /video-conversion-service
 
-COPY go.mod 
+COPY go.mod .
 COPY go.sum .
 
 RUN go mod vendor
