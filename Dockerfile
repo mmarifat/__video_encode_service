@@ -6,16 +6,16 @@ RUN apk add ffmpeg
 
 WORKDIR /video-conversion-service
 
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod .
+COPY go.sum .
 
 RUN go mod vendor
 RUN go mod download
 RUN go mod tidy
 
-COPY . /video-conversion-service
+COPY . .
 
-RUN go build -o .
+RUN go build
 
 ENV PORT=9595
 
