@@ -9,11 +9,9 @@ main
 .env
 
 # exclude everything
-uploaded/*
 logs/*
 
 # exception to the rule
-!uploaded/.gitkeep
 !logs/.gitkeep
 
 # Test binary, built with `go test -c`
