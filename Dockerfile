@@ -1,22 +1,24 @@
-FROM golang:1.19-alpine
+FROM golang:1.19-alpine as builder
 
 ENV GO111MODULE=on
 
 RUN apk add ffmpeg
 
-WORKDIR /video-conversion-service
+WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 
-RUN go mod vendor
 RUN go mod download
-RUN go mod tidy
 
 COPY . .
 
-RUN go build
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-ENV PORT=9595
-
-CMD ["/video-conversion-service/video-conversion-service"]
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
+# Expose port 8080 to the outside world
+EXPOSE 9595
+# Command to run the executable
+CMD ["./main"]
