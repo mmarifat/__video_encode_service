@@ -15,7 +15,7 @@ RUN go mod tidy
 
 COPY . /video-conversion-service
 
-RUN go build -o .
+RUN go build -o ./
 
 ENV PORT=9595
 
