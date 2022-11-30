@@ -69,7 +69,7 @@ pipeline {
                         sh "docker tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-PROD"
 		    } else if (env.GIT_BRANCH == 'develop') {
 			  sh "cp /home/wtv/env/.env.video-conversion-dev .env.production"
-			  sh "DOCKER_BUILDKIT=1 docker build --tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' ."
+			  sh "docker build --tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' ."
                         sh "docker tag '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}' '${env.DOCKERHUB_ACCOUNT}'/'${env.GIT_REPO_NAME}':'${env.GIT_REVISION}'-DEV"
 		    } else {
 			 sh "cp /home/wtv/env/.env.presenter-production .env.production"
