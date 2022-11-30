@@ -1,4 +1,11 @@
 definitions:
+  types.FileDeleteJson:
+    properties:
+      mountPathWithName:
+        type: string
+    required:
+    - mountPathWithName
+    type: object
   types.ResponseObject:
     properties:
       msg:
@@ -12,7 +19,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /compress/file:
+  /files/compress:
     post:
       consumes:
       - multipart/form-data; boundary=normal
@@ -59,8 +66,8 @@ paths:
             $ref: '#/definitions/types.ResponseObject'
       summary: upload any file in compress format
       tags:
-      - COMPRESS
-  /raw/file:
+      - Files
+  /files/raw:
     post:
       consumes:
       - multipart/form-data; boundary=normal
@@ -93,7 +100,29 @@ paths:
             $ref: '#/definitions/types.ResponseObject'
       summary: upload any file in raw format
       tags:
-      - RAW
+      - Files
+  /files/remove:
+    patch:
+      consumes:
+      - application/json
+      description: execution will delete a file from specific location
+      parameters:
+      - description: Mount Path With Name
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/types.FileDeleteJson'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ResponseObject'
+      summary: delete a file from specific location
+      tags:
+      - Files
   /status:
     get:
       consumes:
@@ -105,8 +134,8 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.ResponseObject'
+            type: object
       summary: returns gin and cpu status
       tags:
-      - STATUS
+      - Status
 swagger: "2.0"

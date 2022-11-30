@@ -1,4 +1,4 @@
-package compress
+package files
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,8 +8,8 @@ import (
 	"video-conversion-service/src/services"
 )
 
-// UploadFile @BasePath /api/v1
-// @Tags COMPRESS
+// UploadCompressFile @BasePath /api/v1
+// @Tags Files
 // CompressUpload godoc
 // @Summary upload any file in compress format
 // @Schemes
@@ -20,8 +20,8 @@ import (
 // @Produce json
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
-// @Router /compress/file [post]
-func UploadFile(gtx *gin.Context) {
+// @Router /files/compress [post]
+func UploadCompressFile(gtx *gin.Context) {
 	var form types.FileCompressJson
 	if bindError := gtx.ShouldBind(&form); bindError != nil {
 		funtions.ErrorResponse(gtx, "File upload mulfuntion", bindError.Error())

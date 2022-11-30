@@ -6,15 +6,15 @@ import (
 )
 
 // ApiStatus @BasePath /api/v1
-// @Tags STATUS
+// @Tags Status
 // getStatus godoc
 // @Summary returns gin and cpu status
 // @Schemes
 // @Description execution will return gin and cpu status
 // @Accept json
 // @Produce json
-// @Success 200  {object} types.ResponseObject
-// @Error 400  {object} types.ErrorObject
+// @Success 200  {object} object
+// @Error 400  {object} object
 // @Router /status [get]
 func ApiStatus(gtx *gin.Context) {
 	cpuCtrl.GinHandler(gtx)

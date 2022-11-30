@@ -1,7 +1,6 @@
 package services
 
 import (
-	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -44,7 +43,8 @@ func SaveWithFfmpegTool(fileInputWithFfmpeg string, fileDestWithFfmpeg string, f
 	}
 
 	// remove previous original file
-	if osErr := os.Remove(fileInputWithFfmpeg); osErr != nil {
+	_, osErr := DeleteFileFromDir(fileInputWithFfmpeg)
+	if osErr != nil {
 		return "", osErr
 	}
 

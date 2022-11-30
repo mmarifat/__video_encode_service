@@ -1,4 +1,4 @@
-package raw
+package files
 
 import (
 	"github.com/gin-gonic/gin"
@@ -7,8 +7,8 @@ import (
 	"video-conversion-service/src/services"
 )
 
-// UploadFile @BasePath /api/v1
-// @Tags RAW
+// UploadRawFile @BasePath /api/v1
+// @Tags Files
 // RawUpload godoc
 // @Summary upload any file in raw format
 // @Schemes
@@ -19,8 +19,8 @@ import (
 // @Produce json
 // @Success 200  {object} types.ResponseObject
 // @Error 400  {object} types.ErrorObject
-// @Router /raw/file [post]
-func UploadFile(gtx *gin.Context) {
+// @Router /files/raw [post]
+func UploadRawFile(gtx *gin.Context) {
 	var form types.FileJson
 	if bindError := gtx.ShouldBind(&form); bindError != nil {
 		funtions.ErrorResponse(gtx, "File upload mulfuntion", bindError.Error())

@@ -15,7 +15,6 @@ import (
 	"time"
 	"video-conversion-service/docs"
 	"video-conversion-service/src/configs/funtions"
-	"video-conversion-service/src/controllers/v1"
 	"video-conversion-service/src/middlewares"
 	"video-conversion-service/src/routes"
 )
@@ -37,9 +36,7 @@ func main() {
 	// group routes
 	v1Router := router.Group(basePath)
 	{
-		v1Router.GET("/status", v1.ApiStatus)
-		routes.RawRoutes(v1Router)
-		routes.CompressRoutes(v1Router)
+		routes.BaseRoutes(v1Router)
 	}
 
 	// By raw, http.ListenAndServe (which gin.Run wraps) will serve an unbounded number of requests.

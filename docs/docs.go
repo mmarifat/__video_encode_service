@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/compress/file": {
+        "/files/compress": {
             "post": {
                 "description": "execution will upload any file in compress format",
                 "consumes": [
@@ -26,7 +26,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "COMPRESS"
+                    "Files"
                 ],
                 "summary": "upload any file in compress format",
                 "parameters": [
@@ -86,7 +86,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/raw/file": {
+        "/files/raw": {
             "post": {
                 "description": "execution will upload any file in raw format",
                 "consumes": [
@@ -96,7 +96,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RAW"
+                    "Files"
                 ],
                 "summary": "upload any file in raw format",
                 "parameters": [
@@ -137,6 +137,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/files/remove": {
+            "patch": {
+                "description": "execution will delete a file from specific location",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "delete a file from specific location",
+                "parameters": [
+                    {
+                        "description": "Mount Path With Name",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.FileDeleteJson"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.ResponseObject"
+                        }
+                    }
+                }
+            }
+        },
         "/status": {
             "get": {
                 "description": "execution will return gin and cpu status",
@@ -147,14 +181,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "STATUS"
+                    "Status"
                 ],
                 "summary": "returns gin and cpu status",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.ResponseObject"
+                            "type": "object"
                         }
                     }
                 }
@@ -162,6 +196,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "types.FileDeleteJson": {
+            "type": "object",
+            "required": [
+                "mountPathWithName"
+            ],
+            "properties": {
+                "mountPathWithName": {
+                    "type": "string"
+                }
+            }
+        },
         "types.ResponseObject": {
             "type": "object",
             "properties": {
