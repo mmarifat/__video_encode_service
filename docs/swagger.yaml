@@ -1,4 +1,15 @@
 definitions:
+  types.ErrorObject:
+    properties:
+      error: {}
+      message:
+        type: string
+      nonce:
+        type: integer
+      status:
+        default: 400
+        type: integer
+    type: object
   types.FileDeleteJson:
     properties:
       mountPathWithName:
@@ -8,12 +19,13 @@ definitions:
     type: object
   types.ResponseObject:
     properties:
-      msg:
+      message:
         type: string
       nonce:
         type: integer
       payload: {}
       status:
+        default: 200
         type: integer
     type: object
 info:
@@ -64,6 +76,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.ResponseObject'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorObject'
       summary: upload any file in compress format
       tags:
       - Files
@@ -98,6 +114,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.ResponseObject'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorObject'
       summary: upload any file in raw format
       tags:
       - Files
@@ -120,6 +140,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/types.ResponseObject'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorObject'
       summary: delete a file from specific location
       tags:
       - Files
@@ -134,7 +158,11 @@ paths:
         "200":
           description: OK
           schema:
-            type: object
+            $ref: '#/definitions/types.ResponseObject'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorObject'
       summary: returns gin and cpu status
       tags:
       - Status

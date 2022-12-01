@@ -20,5 +20,5 @@ type FileCompressJson struct {
 }
 
 type FileDeleteJson struct {
-	MountPathWithName string `form:"mountPathWithName" binding:"required"`
+	MountPathWithName string `json:"mountPathWithName" binding:"required"`
 }

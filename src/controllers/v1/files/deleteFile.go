@@ -16,8 +16,8 @@ import (
 // @Param payload body types.FileDeleteJson true "Mount Path With Name"
 // @Accept json
 // @Produce json
-// @Success 200  {object} types.ResponseObject
-// @Error 400  {object} types.ErrorObject
+// @Success 200 {object} types.ResponseObject
+// @Failure 400 {object} types.ErrorObject
 // @Router /files/remove [patch]
 func DeleteFile(gtx *gin.Context) {
 	var payload types.FileDeleteJson

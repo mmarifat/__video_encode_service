@@ -82,6 +82,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.ResponseObject"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.ErrorObject"
+                        }
                     }
                 }
             }
@@ -133,6 +139,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.ResponseObject"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.ErrorObject"
+                        }
                     }
                 }
             }
@@ -167,6 +179,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.ResponseObject"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.ErrorObject"
+                        }
                     }
                 }
             }
@@ -188,7 +206,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/types.ResponseObject"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/types.ErrorObject"
                         }
                     }
                 }
@@ -196,6 +220,22 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "types.ErrorObject": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "message": {
+                    "type": "string"
+                },
+                "nonce": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer",
+                    "default": 400
+                }
+            }
+        },
         "types.FileDeleteJson": {
             "type": "object",
             "required": [
@@ -210,7 +250,7 @@ const docTemplate = `{
         "types.ResponseObject": {
             "type": "object",
             "properties": {
-                "msg": {
+                "message": {
                     "type": "string"
                 },
                 "nonce": {
@@ -218,7 +258,8 @@ const docTemplate = `{
                 },
                 "payload": {},
                 "status": {
-                    "type": "integer"
+                    "type": "integer",
+                    "default": 200
                 }
             }
         }

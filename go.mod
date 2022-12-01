@@ -3,8 +3,8 @@ module video-conversion-service
 go 1.19
 
 require (
-	github.com/appleboy/gin-status-api v1.1.0
 	github.com/axiaoxin-com/ratelimiter v1.0.3
+	github.com/fukata/golang-stats-api-handler v1.0.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/joho/godotenv v1.4.0
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
@@ -23,7 +23,6 @@ require (
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/fukata/golang-stats-api-handler v1.0.0 // indirect
 	github.com/getsentry/sentry-go v0.15.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect

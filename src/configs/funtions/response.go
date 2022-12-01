@@ -7,7 +7,7 @@ import (
 )
 
 func SuccessResponse(gtx *gin.Context, msg string, count int, data any) {
-	resp := &types.ResponseObject{Statuscode: http.StatusOK, Message: msg, Payload: gin.H{
+	resp := &types.ResponseObject{Nonce: MakeTimestamp(), Statuscode: http.StatusOK, Message: msg, Payload: gin.H{
 		"count": count,
 		"data":  data,
 	}}
@@ -16,7 +16,7 @@ func SuccessResponse(gtx *gin.Context, msg string, count int, data any) {
 }
 
 func ErrorResponse(gtx *gin.Context, msg string, error any) {
-	resp := &types.ErrorObject{Statuscode: http.StatusBadRequest, Message: msg, Error: error}
+	resp := &types.ErrorObject{Nonce: MakeTimestamp(), Statuscode: http.StatusBadRequest, Message: msg, Error: error}
 	gtx.Header("Content-Type", "application/json")
 	gtx.JSON(resp.Statuscode, resp)
 }

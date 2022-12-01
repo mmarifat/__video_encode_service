@@ -17,8 +17,8 @@ import (
 // @Param file formData file true "File"
 // @Accept multipart/form-data; boundary=normal
 // @Produce json
-// @Success 200  {object} types.ResponseObject
-// @Error 400  {object} types.ErrorObject
+// @Success 200 {object} types.ResponseObject
+// @Failure 400 {object} types.ErrorObject
 // @Router /files/raw [post]
 func UploadRawFile(gtx *gin.Context) {
 	var form types.FileJson
