@@ -42,6 +42,7 @@ func UploadRawFile(gtx *gin.Context) {
 	uploadedFileName, err1 := services.SaveFileToDir(gtx, file, fileName, destinationPath)
 	if err1 != nil {
 		funtions.ErrorResponse(gtx, "File upload error", err1.Error())
+		return
 	}
 
 	funtions.SuccessResponse(gtx, "File uploaded successfully", 1, gin.H{
