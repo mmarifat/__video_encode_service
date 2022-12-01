@@ -5,12 +5,12 @@ import (
 	"strings"
 )
 
-func MakeDirSync(mountPath string, dirType string) string {
+func MakeDirSync(mountPath string, folder string) string {
 	if strings.HasSuffix(mountPath, "/") == false {
 		mountPath += "/"
 	}
-	if len(dirType) > 0 {
-		mountPath += dirType
+	if len(folder) > 0 {
+		mountPath += folder
 	} else {
 		mountPath += "files"
 	}

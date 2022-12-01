@@ -35,10 +35,10 @@ func UploadCompressFile(gtx *gin.Context) {
 	}
 
 	fileName := gtx.PostForm("name")
-	dirType := gtx.PostForm("type")
+	folder := gtx.PostForm("folder")
 
 	mountPath := gtx.PostForm("mountPath")
-	destinationPath := funtions.MakeDirSync(mountPath, dirType)
+	destinationPath := funtions.MakeDirSync(mountPath, folder)
 
 	uploadedFileName, err1 := services.SaveFileToDir(gtx, file, fileName, destinationPath)
 	if err1 != nil {

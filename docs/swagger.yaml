@@ -35,6 +35,11 @@ paths:
         in: formData
         name: ffmpegStr
         type: string
+      - default: videoclips
+        in: formData
+        name: folder
+        required: true
+        type: string
       - default: /mnt/streamstudio
         in: formData
         name: mountPath
@@ -46,11 +51,6 @@ paths:
       - default: mp4
         in: formData
         name: outputFormat
-        type: string
-      - default: files-encoded
-        in: formData
-        name: type
-        required: true
         type: string
       - description: File
         in: formData
@@ -73,6 +73,11 @@ paths:
       - multipart/form-data; boundary=normal
       description: execution will upload any file in raw format
       parameters:
+      - default: videoclips
+        in: formData
+        name: folder
+        required: true
+        type: string
       - default: /mnt/streamstudio
         in: formData
         name: mountPath
@@ -80,11 +85,6 @@ paths:
         type: string
       - in: formData
         name: name
-        type: string
-      - default: files
-        in: formData
-        name: type
-        required: true
         type: string
       - description: File
         in: formData

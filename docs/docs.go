@@ -45,6 +45,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "default": "videoclips",
+                        "name": "folder",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "default": "/mnt/streamstudio",
                         "name": "mountPath",
                         "in": "formData",
@@ -60,13 +67,6 @@ const docTemplate = `{
                         "default": "mp4",
                         "name": "outputFormat",
                         "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "default": "files-encoded",
-                        "name": "type",
-                        "in": "formData",
-                        "required": true
                     },
                     {
                         "type": "file",
@@ -102,6 +102,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "default": "videoclips",
+                        "name": "folder",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "default": "/mnt/streamstudio",
                         "name": "mountPath",
                         "in": "formData",
@@ -111,13 +118,6 @@ const docTemplate = `{
                         "type": "string",
                         "name": "name",
                         "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "default": "files",
-                        "name": "type",
-                        "in": "formData",
-                        "required": true
                     },
                     {
                         "type": "file",
