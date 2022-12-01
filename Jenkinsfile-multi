@@ -198,4 +198,26 @@ pipeline {
           }
 	}
     }
+    post {
+        always {
+		    script {
+			if (env.GIT_BRANCH  == 'develop' || env.GIT_BRANCH  == 'staging' || env.GIT_BRANCH  ==~ /v*([0-9]*)/) {
+            googlechatnotification (
+	        	message: "[${env.STATUS}] after ${currentBuild.durationString.replace(' and counting', '')} by ${env.USER} ${BUILD_URL} (Commit Message: ${env.COMMIT_MESSAGE})",
+                url: 'https://chat.googleapis.com/v1/spaces/AAAAp1kMdNc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=ZS14gZ4j5u--OCo3q4LodPYSt02xbUs3h9ggGZu5hT0%3D',
+                notifyAborted: true,
+                notifyBackToNormal: true,
+                notifyFailure: true,
+                notifyNotBuilt: true,
+                notifySuccess: true,
+                notifyUnstable: true,
+                sameThreadNotification: true,
+                suppressInfoLoggers: true
+            )
+           } else {
+	      echo "not branch"
+	    }
+	   }
+     }
+   }
 }
