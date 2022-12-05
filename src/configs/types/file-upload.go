@@ -16,7 +16,3 @@ type FileCompressJson struct {
 	OutputFormat  *string               `form:"outputFormat" default:"mp4"`
 	File          *multipart.FileHeader `form:"file" binding:"required" swaggerignore:"true"`
 }
-
-type FileDeleteJson struct {
-	MountPathWithName string `json:"mountPathWithName" binding:"required"`
-}
