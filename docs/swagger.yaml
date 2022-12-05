@@ -10,13 +10,6 @@ definitions:
         default: 400
         type: integer
     type: object
-  types.FileDeleteJson:
-    properties:
-      mountPathWithName:
-        type: string
-    required:
-    - mountPathWithName
-    type: object
   types.ResponseObject:
     properties:
       message:
@@ -112,17 +105,16 @@ paths:
       tags:
       - Files
   /files/remove:
-    patch:
+    delete:
       consumes:
       - application/json
       description: execution will delete a file from specific location
       parameters:
-      - description: Mount Path With Name
-        in: body
-        name: payload
+      - description: File Name with the full mounted path
+        in: query
+        name: mountPathWithName
         required: true
-        schema:
-          $ref: '#/definitions/types.FileDeleteJson'
+        type: string
       produces:
       - application/json
       responses:

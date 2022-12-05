@@ -136,7 +136,7 @@ const docTemplate = `{
             }
         },
         "/files/remove": {
-            "patch": {
+            "delete": {
                 "description": "execution will delete a file from specific location",
                 "consumes": [
                     "application/json"
@@ -150,13 +150,11 @@ const docTemplate = `{
                 "summary": "delete a file from specific location",
                 "parameters": [
                     {
-                        "description": "Mount Path With Name",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.FileDeleteJson"
-                        }
+                        "type": "string",
+                        "description": "File Name with the full mounted path",
+                        "name": "mountPathWithName",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -219,17 +217,6 @@ const docTemplate = `{
                 "status": {
                     "type": "integer",
                     "default": 400
-                }
-            }
-        },
-        "types.FileDeleteJson": {
-            "type": "object",
-            "required": [
-                "mountPathWithName"
-            ],
-            "properties": {
-                "mountPathWithName": {
-                    "type": "string"
                 }
             }
         },
