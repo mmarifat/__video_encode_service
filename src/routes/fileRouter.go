@@ -11,6 +11,7 @@ func FileRoutes(router *gin.RouterGroup) {
 	{
 		fileRouter.POST("/raw", middlewares.MaxUploadBodySizeMiddleware(), files.UploadRawFile)
 		fileRouter.POST("/compress", middlewares.MaxUploadBodySizeMiddleware(), files.UploadCompressFile)
+		fileRouter.GET("/read", files.ReadAFile)
 		fileRouter.DELETE("/remove", files.DeleteFile)
 	}
 }

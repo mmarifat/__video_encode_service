@@ -123,6 +123,38 @@
                 }
             }
         },
+        "/files/read": {
+            "get": {
+                "description": "execution will read a file from specific location and make a stream",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "read a file from specific location",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "File Name with the full mounted path",
+                        "name": "mountPathWithName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
         "/files/remove": {
             "delete": {
                 "description": "execution will delete a file from specific location",

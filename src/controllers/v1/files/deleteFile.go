@@ -19,8 +19,8 @@ import (
 // @Failure 400 {object} types.ErrorObject
 // @Router /files/remove [delete]
 func DeleteFile(gtx *gin.Context) {
-	mountPathWithName, err := gtx.GetQuery("mountPathWithName")
-	if err != true {
+	mountPathWithName, ok := gtx.GetQuery("mountPathWithName")
+	if ok != true {
 		funtions.ErrorResponse(gtx, "File delete payload mulfuntion! ", nil)
 		return
 	}

@@ -104,6 +104,27 @@ paths:
       summary: upload any file in raw format
       tags:
       - Files
+  /files/read:
+    get:
+      consumes:
+      - application/json
+      description: execution will read a file from specific location and make a stream
+      parameters:
+      - description: File Name with the full mounted path
+        in: query
+        name: mountPathWithName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: page not found
+      summary: read a file from specific location
+      tags:
+      - Files
   /files/remove:
     delete:
       consumes:
