@@ -5,16 +5,10 @@ import (
 	"strings"
 )
 
-func MakeDirSync(mountPath string, folder string) string {
+func MakeDirSync(mountPath string) string {
 	if strings.HasSuffix(mountPath, "/") == false {
-		mountPath += "/"
+		mountPath = strings.TrimSuffix(mountPath, "/")
 	}
-	if len(folder) > 0 {
-		mountPath += folder
-	} else {
-		mountPath += "files"
-	}
-
 	if _, err := os.Stat(mountPath); os.IsNotExist(err) {
 		os.Mkdir(mountPath, os.ModePerm)
 	}

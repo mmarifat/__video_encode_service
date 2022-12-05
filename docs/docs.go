@@ -45,13 +45,6 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "default": "videoclips",
-                        "name": "folder",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "default": "/mnt/streamstudio",
                         "name": "mountPath",
                         "in": "formData",
@@ -106,13 +99,6 @@ const docTemplate = `{
                 ],
                 "summary": "upload any file in raw format",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "default": "videoclips",
-                        "name": "folder",
-                        "in": "formData",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "default": "/mnt/streamstudio",

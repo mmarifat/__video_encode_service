@@ -33,12 +33,10 @@ func UploadRawFile(gtx *gin.Context) {
 		return
 	}
 
-	fileName := gtx.PostForm("name")
-	folder := gtx.PostForm("folder")
-
 	mountPath := gtx.PostForm("mountPath")
-	destinationPath := funtions.MakeDirSync(mountPath, folder)
+	destinationPath := funtions.MakeDirSync(mountPath)
 
+	fileName := gtx.PostForm("name")
 	uploadedFileName, err1 := services.SaveFileToDir(gtx, file, fileName, destinationPath)
 	if err1 != nil {
 		funtions.ErrorResponse(gtx, "File upload error", err1.Error())

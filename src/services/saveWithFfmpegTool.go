@@ -43,7 +43,7 @@ func SaveWithFfmpegTool(fileInputWithFfmpeg string, fileDestWithFfmpeg string, f
 	}
 
 	// remove previous original file
-	_, osErr := DeleteFileFromDir(fileInputWithFfmpeg)
+	_, osErr := RenameFfmpegFileToOriginal(fileInputWithFfmpeg, fileDestWithFfmpeg)
 	if osErr != nil {
 		return "", osErr
 	}
