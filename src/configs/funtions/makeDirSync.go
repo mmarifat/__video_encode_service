@@ -6,11 +6,11 @@ import (
 )
 
 func MakeDirSync(mountPath string) string {
-	if strings.HasSuffix(mountPath, "/") == false {
+	if strings.HasSuffix(mountPath, "/") == true {
 		mountPath = strings.TrimSuffix(mountPath, "/")
 	}
 	if _, err := os.Stat(mountPath); os.IsNotExist(err) {
-		os.Mkdir(mountPath, os.ModePerm)
+		os.MkdirAll(mountPath, os.ModePerm)
 	}
 	return mountPath
 }
