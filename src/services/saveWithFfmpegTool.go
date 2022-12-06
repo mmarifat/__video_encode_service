@@ -39,6 +39,7 @@ func SaveWithFfmpegTool(fileInputWithFfmpeg string, fileDestWithFfmpeg string, f
 	_, err := cmd.CombinedOutput()
 
 	if err != nil {
+		DeleteFileFromDir(fileDestWithFfmpeg)
 		return "", err
 	}
 
