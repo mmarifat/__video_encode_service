@@ -44,7 +44,7 @@ func UploadRawFile(gtx *gin.Context) {
 	}
 
 	funtions.SuccessResponse(gtx, "File uploaded successfully", 1, gin.H{
-		"filename": destinationPath + "/" + uploadedFileName,
+		"filename": uploadedFileName,
 		"size":     file.Size,
 	})
 }

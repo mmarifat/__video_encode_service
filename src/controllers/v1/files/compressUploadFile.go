@@ -68,7 +68,7 @@ func UploadCompressFile(gtx *gin.Context) {
 		}()
 	}
 	funtions.SuccessResponse(gtx, apiResponseMessage, 1, gin.H{
-		"fileName":     fileInputForFfmpeg,
+		"filename":     uploadedFileName,
 		"orifinalSize": file.Size,
 	})
 }
