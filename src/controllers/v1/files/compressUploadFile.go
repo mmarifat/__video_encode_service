@@ -56,7 +56,6 @@ func UploadCompressFile(gtx *gin.Context) {
 		_, err2 := services.SaveWithFfmpegTool(fileInputForFfmpeg, fileDestWithFfmpeg, ffmpegStr)
 		if err2 != nil {
 			log.Println("File encoding of " + uploadedFileName + "error " + err2.Error())
-			return
 		}
 	} else {
 		apiResponseMessage = "File uploaded and put in encoding queue successfully"

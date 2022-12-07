@@ -45,7 +45,6 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "default": "/mnt/streamstudio",
                         "name": "mountPath",
                         "in": "formData",
                         "required": true
@@ -101,7 +100,6 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "default": "/mnt/streamstudio",
                         "name": "mountPath",
                         "in": "formData",
                         "required": true
