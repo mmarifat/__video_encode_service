@@ -18,7 +18,7 @@ func GenerateFfmpegFileName(fileName string, outputFormat string) string {
 	return generatedFileName
 }
 
-func SaveWithFfmpegTool(destinationPath string, uploadedFileName string, fileNameWithFfmpeg string, ffmpegString string) (string, error) {
+func SaveWithFfmpegTool(destinationPath string, uploadedFileName string, fileNameWithFfmpeg string, ffmpegString string) error {
 	fileInputForFfmpeg := destinationPath + "/" + uploadedFileName
 	fileDestWithFfmpeg := destinationPath + "/" + fileNameWithFfmpeg
 
@@ -43,14 +43,14 @@ func SaveWithFfmpegTool(destinationPath string, uploadedFileName string, fileNam
 
 	if err != nil {
 		DeleteFileFromDir(fileDestWithFfmpeg)
-		return "", err
+		return err
 	}
 
 	// remove previous original file
 	_, osErr := RenameFfmpegFileToOriginal(fileInputForFfmpeg, fileDestWithFfmpeg)
 	if osErr != nil {
-		return "", osErr
+		return osErr
 	}
 
-	return fileNameWithFfmpeg, nil
+	return nil
 }
