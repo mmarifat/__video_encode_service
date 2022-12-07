@@ -3,6 +3,7 @@ package files
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+	"strings"
 	"video-conversion-service/src/configs/funtions"
 	"video-conversion-service/src/configs/types"
 	"video-conversion-service/src/services"
@@ -64,7 +65,7 @@ func UploadCompressFile(gtx *gin.Context) {
 		}()
 	}
 	funtions.SuccessResponse(gtx, apiResponseMessage, 1, gin.H{
-		"filename":     fileNameWithFfmpeg,
+		"filename":     strings.ReplaceAll(fileNameWithFfmpeg, "-----enc.", "."),
 		"orifinalSize": file.Size,
 	})
 }

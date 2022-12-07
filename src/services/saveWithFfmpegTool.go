@@ -11,9 +11,9 @@ func GenerateFfmpegFileName(fileName string, outputFormat string) string {
 	extension := filepath.Ext(fileName)
 	generatedFileName := strings.TrimSuffix(fileName, extension)
 	if len(outputFormat) > 0 {
-		generatedFileName += "--enc." + outputFormat
+		generatedFileName += "-----enc." + outputFormat
 	} else {
-		generatedFileName += "--enc" + extension
+		generatedFileName += "-----enc" + extension
 	}
 	return generatedFileName
 }
