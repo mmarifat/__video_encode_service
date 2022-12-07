@@ -58,8 +58,8 @@ func main() {
 	docs.SwaggerInfo.Description = "This microservice deals with the upload and optinally compress files with the help of FFMPEG library as quality passed by user"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	log.Println("APi is running at http://localhost:" + port + "\n")
-	log.Println("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
+	log.Printf("APi is running at http://localhost:%s", port)
+	log.Printf("APi Docs is running at http://localhost:%s/swagger/index.html", port)
 
 	srv := &http.Server{
 		Addr:    ":" + port,
