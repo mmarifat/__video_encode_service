@@ -46,21 +46,18 @@ func UploadCompressFile(gtx *gin.Context) {
 
 	ffmpegStr := gtx.PostForm("ffmpegStr")
 	outputFormat := gtx.PostForm("outputFormat")
-
-	fileInputForFfmpeg := destinationPath + "/" + uploadedFileName
 	fileNameWithFfmpeg := services.GenerateFfmpegFileName(uploadedFileName, outputFormat)
-	fileDestWithFfmpeg := destinationPath + "/" + fileNameWithFfmpeg
 
 	apiResponseMessage := "File uploaded and encoded successfully"
 	if gtx.PostForm("encodeWaiting") == "true" {
-		_, err2 := services.SaveWithFfmpegTool(fileInputForFfmpeg, fileDestWithFfmpeg, ffmpegStr)
+		_, err2 := services.SaveWithFfmpegTool(destinationPath, uploadedFileName, fileNameWithFfmpeg, ffmpegStr)
 		if err2 != nil {
 			log.Println("File encoding of " + fileNameWithFfmpeg + "error " + err2.Error())
 		}
 	} else {
 		apiResponseMessage = "File uploaded and put in encoding queue successfully"
 		go func() {
-			_, err2 := services.SaveWithFfmpegTool(fileInputForFfmpeg, fileDestWithFfmpeg, ffmpegStr)
+			_, err2 := services.SaveWithFfmpegTool(destinationPath, uploadedFileName, fileNameWithFfmpeg, ffmpegStr)
 			if err2 != nil {
 				log.Println("File encoding of " + fileNameWithFfmpeg + "error " + err2.Error())
 			}
