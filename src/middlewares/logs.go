@@ -3,7 +3,6 @@ package middlewares
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"os"
 	"time"
 	"video-conversion-service/src/configs/funtions"
 )
@@ -19,10 +18,10 @@ func LogsMiddleware() gin.HandlerFunc {
 		// color aren't needed in release mode
 		gin.DisableConsoleColor()
 		// in release mode, use the file to store the success and error logs
-		loggerSuccessFile, _ := os.Create("logs/success.log")
-		loggerErrorFile, _ := os.Create("logs/error.log")
-		gin.DefaultWriter = loggerSuccessFile
-		gin.DefaultErrorWriter = loggerErrorFile
+		// loggerSuccessFile, _ := os.Create("logs/success.log")
+		// loggerErrorFile, _ := os.Create("logs/error.log")
+		// gin.DefaultWriter = loggerSuccessFile
+		// gin.DefaultErrorWriter = loggerErrorFile
 	}
 	return gin.LoggerWithConfig(
 		gin.LoggerConfig{

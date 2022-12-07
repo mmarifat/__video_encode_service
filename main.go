@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -59,8 +58,8 @@ func main() {
 	docs.SwaggerInfo.Description = "This microservice deals with the upload and optinally compress files with the help of FFMPEG library as quality passed by user"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	fmt.Printf("APi is running at http://localhost:" + port + "\n")
-	fmt.Printf("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
+	log.Println("APi is running at http://localhost:" + port + "\n")
+	log.Println("APi Docs is running at http://localhost:" + port + "/swagger/index.html\n")
 
 	srv := &http.Server{
 		Addr:    ":" + port,
