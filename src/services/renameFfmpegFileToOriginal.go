@@ -6,16 +6,16 @@ import (
 	"strings"
 )
 
-func RenameFfmpegFileToOriginal(inputFileWithDest string, ffmpegFileWithDest string) (bool, error) {
+func RenameFfmpegFileToOriginal(inputFileWithDest string, ffmpegFileWithDest string) (string, error) {
 	generatedFile := strings.TrimSuffix(inputFileWithDest, filepath.Ext(inputFileWithDest))
 	generatedFile += filepath.Ext(ffmpegFileWithDest)
 
 	_, err := DeleteFileFromDir(inputFileWithDest)
 	if err != nil {
-		return false, err
+		return "", err
 	}
 	if osErr := os.Rename(ffmpegFileWithDest, generatedFile); osErr != nil {
-		return false, osErr
+		return "", osErr
 	}
-	return true, nil
+	return generatedFile, nil
 }

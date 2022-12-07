@@ -48,26 +48,26 @@ func UploadCompressFile(gtx *gin.Context) {
 	outputFormat := gtx.PostForm("outputFormat")
 
 	fileInputForFfmpeg := destinationPath + "/" + uploadedFileName
-	fileDestWithFfmpeg := services.GenerateFfmpegFileName(uploadedFileName, outputFormat)
-	fileDestWithFfmpeg = destinationPath + "/" + fileDestWithFfmpeg
+	fileNameWithFfmpeg := services.GenerateFfmpegFileName(uploadedFileName, outputFormat)
+	fileDestWithFfmpeg := destinationPath + "/" + fileNameWithFfmpeg
 
 	apiResponseMessage := "File uploaded and encoded successfully"
 	if gtx.PostForm("encodeWaiting") == "true" {
 		_, err2 := services.SaveWithFfmpegTool(fileInputForFfmpeg, fileDestWithFfmpeg, ffmpegStr)
 		if err2 != nil {
-			log.Println("File encoding of " + uploadedFileName + "error " + err2.Error())
+			log.Println("File encoding of " + fileNameWithFfmpeg + "error " + err2.Error())
 		}
 	} else {
 		apiResponseMessage = "File uploaded and put in encoding queue successfully"
 		go func() {
 			_, err2 := services.SaveWithFfmpegTool(fileInputForFfmpeg, fileDestWithFfmpeg, ffmpegStr)
 			if err2 != nil {
-				log.Println("File encoding of " + uploadedFileName + "error " + err2.Error())
+				log.Println("File encoding of " + fileNameWithFfmpeg + "error " + err2.Error())
 			}
 		}()
 	}
 	funtions.SuccessResponse(gtx, apiResponseMessage, 1, gin.H{
-		"filename":     uploadedFileName,
+		"filename":     fileNameWithFfmpeg,
 		"orifinalSize": file.Size,
 	})
 }
