@@ -51,6 +51,10 @@ paths:
         in: formData
         name: outputFormat
         type: string
+      - default: false
+        in: formData
+        name: readAtNativeFrame
+        type: boolean
       - description: File
         in: formData
         name: file

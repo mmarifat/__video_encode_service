@@ -61,6 +61,12 @@ const docTemplate = `{
                         "in": "formData"
                     },
                     {
+                        "type": "boolean",
+                        "default": false,
+                        "name": "readAtNativeFrame",
+                        "in": "formData"
+                    },
+                    {
                         "type": "file",
                         "description": "File",
                         "name": "file",
